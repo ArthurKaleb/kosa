@@ -27,29 +27,38 @@ header{
 
 h1{font-size:22px}
 
+.actionsTop{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* BOTÕES */
 .btn{
-  width:45px;height:45px;
+  width:45px;
+  height:45px;
   border-radius:50%;
   border:1px solid #333;
   background:#111;
   color:#fff;
-  font-size:22px;
+  font-size:20px;
   cursor:pointer;
 }
 
 .btn:hover{background:#fff;color:#000}
 
-/* MENU DO + */
+/* MENU + */
 .menu{
   position:absolute;
-  top:70px;
   right:30px;
+  top:70px;
   background:#111;
   border:1px solid #333;
   border-radius:10px;
   display:none;
   flex-direction:column;
   overflow:hidden;
+  z-index:10;
 }
 
 .menu button{
@@ -61,10 +70,9 @@ h1{font-size:22px}
   cursor:pointer;
 }
 
-.menu button:hover{
-  background:#222;
-}
+.menu button:hover{background:#222}
 
+/* GRID */
 .grid{
   margin-top:20px;
   display:grid;
@@ -76,12 +84,11 @@ h1{font-size:22px}
   background:#111;
   padding:12px;
   border-radius:12px;
-  opacity:0;
-  transform:translateY(10px);
-  animation:fade .3s ease forwards;
+  animation:fade .25s ease;
 }
 
 @keyframes fade{
+  from{opacity:0;transform:translateY(8px)}
   to{opacity:1;transform:translateY(0)}
 }
 
@@ -101,6 +108,7 @@ img,video{
   object-fit:cover;
 }
 
+/* TEXT AREA */
 textarea{
   width:100%;
   background:#000;
@@ -111,6 +119,7 @@ textarea{
   resize:none;
 }
 
+/* ACTIONS */
 .actions{
   display:flex;
   gap:5px;
@@ -123,12 +132,14 @@ button,a{
   font-size:12px;
   border-radius:6px;
   cursor:pointer;
+  text-align:center;
+  text-decoration:none;
 }
 
-.download{background:#fff;color:#000;text-decoration:none}
+.download{background:#fff;color:#000}
 .delete{background:#222;color:red}
 .copy{background:#fff;color:#000}
-.save{background:#222;color:#fff}
+.save{background:#333;color:#fff}
 </style>
 </head>
 
@@ -137,11 +148,18 @@ button,a{
 <div class="app">
 
 <header>
+
   <h1>Drive Completo</h1>
 
-  <div style="position:relative">
+  <div style="position:relative" class="actionsTop">
+
+    <!-- NOTIFICAÇÃO -->
+    <button class="btn" id="notif">🔔</button>
+
+    <!-- BOTÃO + -->
     <button class="btn" id="plus">+</button>
 
+    <!-- MENU -->
     <div class="menu" id="menu">
       <button onclick="selectFile()">📁 Arquivo</button>
       <button onclick="addText()">📝 Texto</button>
@@ -149,6 +167,7 @@ button,a{
 
     <input type="file" id="file" multiple style="display:none">
   </div>
+
 </header>
 
 <div class="grid" id="grid"></div>
@@ -168,11 +187,12 @@ const TABLE="arquivos";
 
 const grid=document.getElementById("grid");
 const fileInput=document.getElementById("file");
-
 const menu=document.getElementById("menu");
 const plus=document.getElementById("plus");
 
-/* MENU TOGGLE */
+/* ======================
+   MENU +
+====================== */
 plus.onclick=()=>{
   menu.style.display = menu.style.display==="flex" ? "none":"flex";
 };
@@ -184,7 +204,14 @@ document.addEventListener("click",(e)=>{
 });
 
 /* ======================
-   ARQUIVOS
+   NOTIFICAÇÃO (visual só)
+====================== */
+document.getElementById("notif").onclick=()=>{
+  alert("Notificações ainda em modo básico");
+};
+
+/* ======================
+   UPLOAD
 ====================== */
 window.selectFile=()=>{
   fileInput.click();
@@ -210,6 +237,7 @@ fileInput.onchange=async(e)=>{
       url:data.publicUrl,
       caminho:path,
       tipo_item:"file",
+      content:"",
       criado_em:new Date()
     });
   }
@@ -222,7 +250,7 @@ fileInput.onchange=async(e)=>{
 ====================== */
 window.addText=async()=>{
 
-  const text=prompt("Escreva seu texto:");
+  const text=prompt("Escreva o texto:");
 
   if(!text) return;
 
@@ -268,7 +296,10 @@ async function load(){
 
         <div>${item.nome}</div>
 
-        <a class="download" href="${item.url}" download>Baixar</a>
+        <div class="actions">
+          <a class="download" href="${item.url}" download>Baixar</a>
+          <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
+        </div>
       `;
     }
 
@@ -279,8 +310,8 @@ async function load(){
         <textarea id="t-${item.id}">${item.content}</textarea>
 
         <div class="actions">
-          <button class="copy" onclick="copyText('${item.id}')">Copiar</button>
-          <button class="save" onclick="saveText('${item.id}')">Salvar</button>
+          <button class="copy" onclick="copy('${item.id}')">Copiar</button>
+          <button class="save" onclick="save('${item.id}')">Salvar</button>
           <button class="delete" onclick="del('${item.id}')">Excluir</button>
         </div>
       `;
@@ -293,13 +324,12 @@ async function load(){
 /* ======================
    TEXT ACTIONS
 ====================== */
-window.copyText=(id)=>{
+window.copy=(id)=>{
   const t=document.getElementById("t-"+id);
   navigator.clipboard.writeText(t.value);
-  alert("Copiado!");
 };
 
-window.saveText=async(id)=>{
+window.save=async(id)=>{
   const t=document.getElementById("t-"+id);
 
   await supabase
@@ -308,6 +338,9 @@ window.saveText=async(id)=>{
   .eq("id",id);
 };
 
+/* ======================
+   DELETE (VOLTOU COMPLETO)
+====================== */
 window.del=async(id,path)=>{
 
   if(path){
