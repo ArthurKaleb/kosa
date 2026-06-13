@@ -195,12 +195,14 @@
         font-weight: 600;
         letter-spacing: -0.5px;
         margin: 0;
+        text-align: left;
         }
 
         .subtitle {
         color: #a1a1aa;
         margin-top: 8px;
         font-size: 15px;
+        text-align: left;
         }
 
         /* ==========================================================================
@@ -896,7 +898,7 @@
                 display: block;
             }
 
-            /* Estilo do novo botão sanduíche */
+            /* Estilo do botão sanduíche op.png */
             .mobile-menu-btn {
                 display: flex;
                 align-items: center;
@@ -921,14 +923,35 @@
                 opacity: 0.8;
             }
 
-            /* Afasta o título do cabeçalho para não bater no botão */
+            /* Mantém o título de todas as páginas SEMPRE alinhado à esquerda no Mobile */
             header { 
-                padding-left: 50px; 
+                padding-top: 65px; /* Abre espaço para os botões fixos superiores sem quebrar o alinhamento */
+                padding-left: 0px; 
                 flex-direction: column; 
                 align-items: flex-start; 
+                justify-content: flex-start;
                 gap: 16px; 
+                width: 100%;
             }
-            header > div:last-child { align-self: flex-end; }
+
+            /* Estrutura especial para o cabeçalho do Mini Drive no celular */
+            .header-drive-mobile {
+                position: relative;
+                padding-top: 0px; /* Reset */
+                margin-top: 65px;
+                display: flex !important;
+                flex-direction: column-reverse !important; /* Coloca o título EMBAIXO do botão de mais */
+                align-items: flex-start !important;
+                width: 100%;
+            }
+
+            /* Fixa a área do botão de mais do mini drive no canto superior direito */
+            .drive-plus-wrapper {
+                position: absolute;
+                top: -45px;
+                right: 0;
+                align-self: flex-end;
+            }
 
             /* Nova Sidebar Lateral (escondida por padrão) */
             .sidebar {
@@ -998,7 +1021,8 @@
 
             /* Ajustes finos de interface para Mobile */
             .page { padding: 20px; }
-            h1 { font-size: 24px; }
+            h1 { font-size: 24px; text-align: left; }
+            .subtitle { text-align: left; }
             .dashboard-grid { grid-template-columns: 1fr; }
             .pomodoro-container { padding: 20px; margin: 20px auto; }
             .timer-display { font-size: 56px; }
@@ -1087,12 +1111,12 @@
         </div>
 
         <div id="page-drive" class="page">
-            <header>
+            <header class="header-drive-mobile">
             <div>
                 <h1>Mini Drive</h1>
                 <div class="subtitle">Seus arquivos e notas na nuvem</div>
             </div>
-            <div style="position:relative">
+            <div class="drive-plus-wrapper">
                 <button class="iconBtn" id="plus">+</button>
                 <div class="menu" id="menu">
                 <button onclick="selectFile()">
@@ -1370,7 +1394,7 @@
 
             let promptModificado = userText;
             if (userText.toLowerCase().includes('estudo') || userText.toLowerCase().includes('plano')) {
-            promptModificado = `Aja como um mentor acadêmico moderno para o Kaleb, um estudante de 14 anos do 9º ano que também trabalha com design gráfico. Monte um cronograma/plano focado e direto ao ponto, intercalando matérias escolares com práticas de UI/UX ou artes visuais. Responda em português de forma clara e limpa, usando marcadores para facilitar a leitura. Solicitação dele: ${userText}`;
+            promptModificado = `Aja como um mentor acadêmico moderno para o Kaleb, um estudante de 14 anos do 9º ano que também trabalha com design graphic. Monte um cronograma/plano focado e direto ao ponto, intercalando matérias escolares com práticas de UI/UX ou artes visuais. Responda em português de forma clara e limpa, usando marcadores para facilitar a leitura. Solicitação dele: ${userText}`;
             }
 
             try {
