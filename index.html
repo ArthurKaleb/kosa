@@ -281,103 +281,6 @@ button, .btn-link {
   color: #fff; 
   border-color: #f43f5e;
 }
-
-/* ==========================================================================
-   MODAIS (TEXTO E PRÉVIA DE IMAGEM)
-   ========================================================================== */
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal {
-  width: 90%;
-  max-width: 500px;
-  background: #18181b;
-  border: 1px solid #27272a;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-.modal h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.modal textarea {
-  width: 100%;
-  height: 180px;
-  background: #09090b;
-  color: #fff;
-  border: 1px solid #27272a;
-  border-radius: 10px;
-  padding: 14px;
-  font-size: 14px;
-  line-height: 1.5;
-  resize: none;
-  outline: none;
-  box-sizing: border-box;
-  font-family: inherit;
-  transition: border-color 0.2s;
-}
-
-.modal textarea:focus {
-  border-color: #a1a1aa;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.modal-actions button {
-  padding: 10px 16px;
-  font-size: 13px;
-}
-
-.btn-cancel {
-  background: transparent;
-  color: #a1a1aa;
-}
-.btn-cancel:hover { color: #fff; }
-
-.save {
-  background: #f4f4f5;
-  color: #09090b;
-}
-.save:hover { background: #e4e4e7; }
-
-/* PRÉVIA DE IMAGEM (VIEWER) */
-#imageViewer {
-  flex-direction: column;
-}
-#previewExpanded {
-  max-width: 90vw;
-  max-height: 85vh;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
-}
-.close-viewer {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: #a1a1aa;
-  font-size: 36px;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-.close-viewer:hover { color: #fff; }
 </style>
 </head>
 
@@ -450,8 +353,8 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// Controla qual uuid está sendo editado no momento
-let currentEditingUuid = null;
+// Controla qual ID real está sendo editado
+let currentEditingId = null;
 
 /* ===========================
    MENU E MODAIS
@@ -479,9 +382,10 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
-window.openEditModal=(uuid, currentContent)=>{
-  currentEditingUuid = uuid;
-  document.getElementById("editTextInput").value = currentContent;
+window.openEditModal=(id, currentContent)=>{
+  currentEditingId = id;
+  // Desfaz a codificação para exibir quebras de linha normais no campo de edição
+  document.getElementById("editTextInput").value = currentContent.replace(/\\n/g, '\n');
   document.getElementById("editModal").style.display="flex";
   setTimeout(()=>{
     document.getElementById("editTextInput").focus();
@@ -490,7 +394,7 @@ window.openEditModal=(uuid, currentContent)=>{
 
 window.closeEditModal=()=>{
   document.getElementById("editModal").style.display="none";
-  currentEditingUuid = null;
+  currentEditingId = null;
 };
 
 /* ===========================
@@ -559,10 +463,10 @@ window.saveText=async()=>{
   }
 };
 
-// Nova função para atualizar o texto existente no banco
+// CORREÇÃO: Função atualizada para filtrar por .eq("id", ...) garantindo o mapeamento correto do banco
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
-  if(!newText.trim() || !currentEditingUuid) return;
+  if(!newText.trim() || !currentEditingId) return;
 
   const novoTitulo = newText.substring(0, 20).trim() || "Bloco de Notas";
 
@@ -573,7 +477,7 @@ window.updateText=async()=>{
       nome: novoTitulo,
       tamanho: newText.length
     })
-    .eq("uuid", currentEditingUuid);
+    .eq("id", currentEditingId);
 
   if (error) {
     alert("Erro ao atualizar texto: " + error.message);
@@ -635,7 +539,8 @@ async function load(){
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
 
-      const itemId = item.uuid;
+      // CORREÇÃO: Mapeando a coluna correta 'item.id'
+      const itemId = item.id;
 
       if(item.tipo_item==="file"){
         const isImage = item.tipo?.startsWith("image/");
@@ -657,8 +562,13 @@ async function load(){
           </div>
         `;
       } else {
-        // Escapando as aspas simples do texto para evitar erros no atributo HTML
-        const safeContent = (item.content || "").replace(/'/g, "\\'");
+        // Tratamento seguro de strings para evitar que aspas ou quebras de linha quebrem o parâmetro do onclick
+        const safeContent = (item.content || "")
+          .replace(/\\/g, "\\\\")
+          .replace(/'/g, "\\'")
+          .replace(/"/g, '\\"')
+          .replace(/\n/g, "\\n")
+          .replace(/\r/g, "\\r");
 
         div.innerHTML=`
           <div class="preview">
@@ -680,12 +590,13 @@ async function load(){
   }
 }
 
+// CORREÇÃO: Remoção filtrando por .eq("id", id) para alinhar perfeitamente com o banco
 window.del=async(id,path)=>{
   try {
     if(path && path.trim() !== "" && path !== "text-note"){
       await supabase.storage.from(BUCKET).remove([path]);
     }
-    const { error } = await supabase.from(TABLE).delete().eq("uuid", id);
+    const { error } = await supabase.from(TABLE).delete().eq("id", id);
     if(error) throw error;
     load();
   } catch (error) {
