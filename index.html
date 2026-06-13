@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive Final Estável</title>
+<title>Mini Drive by Kaleb</title>
 
 <style>
 /* ==========================================================================
@@ -149,7 +149,7 @@ h1 {
 }
 
 .preview img.real:hover {
-  transform: scale(1.05); /* Efeito de zoom sutil para indicar clique */
+  transform: scale(1.05);
 }
 
 .iconFile {
@@ -211,23 +211,33 @@ h1 {
 
 .card-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: auto;
 }
 
 /* BOTÕES GERAIS */
 button, .btn-link {
   border: none;
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 8px 10px;
+  font-size: 12px;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+.view {
+  background: #27272a;
+  color: #e4e4e7;
+  flex-grow: 1;
+}
+.view:hover {
+  background: #3f3f46;
+  color: #fff;
 }
 
 .download {
@@ -238,16 +248,23 @@ button, .btn-link {
 .download:hover { background: #e4e4e7; }
 
 .delete {
-  background: #27272a;
+  background: transparent;
+  border: 1px solid #3f3f46;
   color: #f43f5e;
 }
 .delete:hover { 
   background: #f43f5e; 
   color: #fff; 
+  border-color: #f43f5e;
 }
 
 .delete-full {
   width: 100%;
+  background: #27272a;
+  border: none;
+}
+.delete-full:hover {
+  background: #f43f5e;
 }
 
 /* ==========================================================================
@@ -310,6 +327,7 @@ button, .btn-link {
 
 .modal-actions button {
   padding: 10px 16px;
+  font-size: 13px;
 }
 
 .btn-cancel {
@@ -353,7 +371,7 @@ button, .btn-link {
 <div class="app">
 
 <header>
-  <h1>Drive Final Estável</h1>
+  <h1>Mini Drive by Kaleb</h1>
 
   <div style="position:relative">
     <button class="iconBtn" id="plus">+</button>
@@ -442,7 +460,7 @@ window.openViewer=(url)=>{
 
 window.closeViewer=()=>{
   document.getElementById("imageViewer").style.display="none";
-  document.getElementById("previewExpanded").src = ""; // limpa para não bugar a próxima abertura
+  document.getElementById("previewExpanded").src = ""; 
 };
 
 /* ===========================
@@ -450,24 +468,20 @@ window.closeViewer=()=>{
 =========================== */
 window.forceDownload = async (url, filename) => {
   try {
-    // Busca o arquivo como pacote de dados
     const response = await fetch(url);
     const blob = await response.blob();
     
-    // Cria um link temporário na memória do navegador
     const blobUrl = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = blobUrl;
-    a.download = filename; // Força o nome do arquivo
+    a.download = filename; 
     
-    // Clica invisivelmente e limpa a memória
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
     console.error("Erro ao forçar download, abrindo em nova guia", error);
-    // Fallback: se o navegador bloquear o fetch por segurança de domínio, ele abre normal
     window.open(url, '_blank');
   }
 };
@@ -536,7 +550,6 @@ async function load(){
       div.style.animationDelay = `${i * 80}ms`;
 
       if(item.tipo_item==="file"){
-        // Verifica se é imagem para habilitar o click de Prévia
         const isImage = item.tipo?.startsWith("image/");
         
         div.innerHTML=`
@@ -549,6 +562,7 @@ async function load(){
           <div class="card-body">
             <div class="card-title" title="${item.nome}">${item.nome}</div>
             <div class="card-actions">
+              <button class="view" onclick="window.open('${item.url}', '_blank')">Ver</button>
               <button class="download" onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
               <button class="delete" onclick="del('${item.id}','${item.caminho || ''}')">Excluir</button>
             </div>
