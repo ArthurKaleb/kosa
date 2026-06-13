@@ -9,22 +9,17 @@
         /* ==========================================================================
         CONTEÚDO E LAYOUT BASE (Premium Dark UI)
         ========================================================================== */
-        html {
-            height: -webkit-fill-available;
-        }
-
         body {
-            margin: 0;
-            background: #09090b;
-            color: #f4f4f5;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            display: flex;
-            height: 100dvh; /* Altura dinâmica que respeita o navegador mobile */
-            min-height: -webkit-fill-available; /* Fallback para Safari no iOS */
-            overflow: hidden;
-            opacity: 0;
-            animation: siteEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        margin: 0;
+        background: #09090b;
+        color: #f4f4f5;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        opacity: 0;
+        animation: siteEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Animação Cinematográfica de Entrada do Site */
@@ -89,24 +84,28 @@
         background: transparent;
         border: none;
         color: #a1a1aa;
-        padding: 12px;
+        padding: 12px 16px;
         border-radius: 8px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         font-size: 15px;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: all 0.2s ease;
         text-align: left;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 4px;
         position: relative;
         }
 
         .nav-item img {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
         opacity: 0.7;
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition: all 0.2s ease;
         }
 
         .nav-item:hover {
@@ -468,124 +467,15 @@
         .btn-outline:hover { background: #27272a; border-color: #52525b; }
 
         /* ==========================================================================
-        INTERFACE DO CHAT DE IA (GEMINI)
+        INTERFACE DO CHAT DE IA (GEMINI) - EM BREVE
         ========================================================================== */
-        .chat-wrapper {
-        background: #18181b;
-        border: 1px solid #27272a;
-        border-radius: 14px;
-        height: calc(100vh - 200px);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
-        }
-
-        .chat-messages {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        }
-
-        /* Barra de rolagem preta para o Chat */
-        .chat-messages::-webkit-scrollbar {
-        width: 6px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-        background: #18181b;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-        background: #09090b;
-        border-radius: 3px;
-        border: 1px solid #27272a;
-        }
-
-        .chat-bubble {
-        max-width: 75%;
-        padding: 12px 16px;
-        border-radius: 12px;
-        font-size: 14px;
-        line-height: 1.5;
-        word-break: break-word;
-        opacity: 0;
-        transform: translateY(10px) scale(0.98);
-        animation: bubbleEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes bubbleEntrance {
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        }
-
-        .chat-bubble.user {
-        background: #27272a;
-        color: #fff;
-        align-self: flex-end;
-        border-bottom-right-radius: 2px;
-        }
-
-        .chat-bubble.assistant {
-        background: #09090b;
-        color: #e4e4e7;
-        border: 1px solid #27272a;
-        align-self: flex-start;
-        border-bottom-left-radius: 2px;
-        white-space: pre-wrap;
-        }
-
-        .chat-bubble.system-error {
-        background: rgba(244, 63, 94, 0.1);
-        border: 1px solid rgba(244, 63, 94, 0.2);
-        color: #f43f5e;
-        align-self: center;
-        font-size: 13px;
-        }
-
+        
         .chat-input-area {
         padding: 16px;
         background: #1c1c1f;
         border-top: 1px solid #27272a;
         display: flex;
         gap: 12px;
-        }
-
-        .chat-input-area input {
-        flex-grow: 1;
-        background: #09090b;
-        border: 1px solid #27272a;
-        border-radius: 8px;
-        padding: 14px;
-        color: #fff;
-        font-size: 14px;
-        outline: none;
-        transition: border-color 0.2s;
-        }
-        .chat-input-area input:focus { border-color: #71717a; }
-
-        /* Configuração da Chave */
-        .api-key-container {
-        padding: 10px 16px;
-        background: #111113;
-        border-bottom: 1px solid #27272a;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        }
-        .api-key-container input {
-        background: #09090b;
-        border: 1px solid #27272a;
-        color: #fff;
-        font-size: 12px;
-        padding: 6px 10px;
-        border-radius: 4px;
-        width: 250px;
-        outline: none;
         }
 
         /* ==========================================================================
@@ -886,123 +776,6 @@
 
         .close-viewer { position: absolute; top: 20px; right: 30px; color: #a1a1aa; font-size: 36px; cursor: pointer; transition: color 0.2s, transform 0.2s; }
         .close-viewer:hover { color: #fff; transform: scale(1.1); }
-
-        /* ==========================================================================
-        RESPONSIVIDADE (MOBILE / BOTTOM NAVBAR)
-        ========================================================================== */
-        @media (max-width: 768px) {
-            body {
-                display: block; /* Remove o flex para lidar melhor com a navbar fixa */
-            }
-
-            .sidebar {
-                position: fixed; /* Fixa a barra no fundo da tela */
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 70px;
-                padding-bottom: env(safe-area-inset-bottom); /* Área segura do iPhone */
-                background: rgba(24, 24, 27, 0.95); /* Leve transparência para estilo */
-                backdrop-filter: blur(10px); /* Efeito de desfoque */
-                -webkit-backdrop-filter: blur(10px);
-                border-right: none;
-                border-top: 1px solid #27272a;
-                flex-direction: row;
-                justify-content: center;
-                z-index: 9999; /* Garante que fique acima de tudo */
-            }
-
-            .sidebar h2 {
-                display: none; /* Esconde o título da Workspace */
-            }
-
-            .main-content {
-                height: 100dvh;
-                overflow-y: auto;
-                /* Dá um espaço no fundo para o conteúdo não ficar escondido atrás da navbar */
-                padding-bottom: calc(90px + env(safe-area-inset-bottom)); 
-                box-sizing: border-box;
-            }
-
-            .nav-menu {
-                flex-direction: row;
-                width: 100%;
-                gap: 0;
-                justify-content: space-around;
-            }
-
-            .nav-item {
-                flex-direction: column;
-                gap: 4px;
-                padding: 8px;
-                font-size: 11px;
-                justify-content: center;
-                border-radius: 0;
-            }
-
-            .nav-item:hover {
-                transform: none; /* Remove o deslocamento X no mobile */
-            }
-
-            /* Modifica a linha ativa para ficar na parte superior do botão */
-            .nav-item::after {
-                top: 0;
-                left: 10%;
-                width: 80%;
-                height: 3px;
-                transform: scaleX(0.3);
-                border-radius: 0 0 4px 4px;
-            }
-
-            .nav-item.active::after {
-                transform: scaleX(1);
-            }
-
-            /* Ajustes finos de interface para Mobile */
-            .page {
-                padding: 20px;
-            }
-
-            h1 { font-size: 24px; }
-            
-            header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            header > div:last-child { align-self: flex-end; } /* Posiciona botão de mais do Drive */
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pomodoro-container {
-                padding: 20px;
-                margin: 20px auto;
-            }
-
-            .timer-display {
-                font-size: 56px;
-            }
-
-            .api-key-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .api-key-container input {
-                width: 100%;
-            }
-
-            .chat-wrapper {
-                height: calc(100vh - 220px);
-            }
-
-            /* Reajuste da grid do Mini Drive */
-            .grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .preview {
-                height: 100px;
-            }
-        }
         </style>
     </head>
 
@@ -1116,24 +889,12 @@
             <header>
             <div>
                 <h1>Assistente IA</h1>
-                <div class="subtitle">Integrado diretamente com o Google Gemini</div>
+                <div class="subtitle">Em breve...</div>
             </div>
             </header>
             
-            <div class="chat-wrapper">
-            <div class="api-key-container">
-                <span style="font-size: 12px; color: #a1a1aa;">Chave de API do Google AI Studio:</span>
-                <input type="password" id="gemini-key-input" placeholder="Sua chave está configurada no código" onchange="saveApiKey(this.value)">
-            </div>
-
-            <div class="chat-messages" id="chat-messages-box">
-                <div class="chat-bubble assistant">Olá Kaleb! Sou seu assistente de IA. Pronto para criarmos artes iradas ou montarmos aquele plano de estudos esperto para o 9º ano? Me diga o que precisamos fazer hoje!</div>
-            </div>
-
-            <div class="chat-input-area">
-                <input type="text" id="chat-user-input" placeholder="Peça um plano de estudos ou tire suas dúvidas...">
-                <button class="btn-pomo btn-primary" style="font-size:13px; padding:0 20px;" onclick="sendMessageToIA()">Enviar</button>
-            </div>
+            <div style="display: flex; justify-content: center; align-items: center; height: 50vh; color: #71717a;">
+                <p>Funcionalidade em desenvolvimento. Em breve, esta IA estará disponível!</p>
             </div>
         </div>
 
@@ -1303,90 +1064,6 @@
 
         document.getElementById('todo-input').addEventListener('keypress', (e) => {
             if(e.key === 'Enter') addTodo();
-        });
-
-        // --- LÓGICA DO CHAT DE IA ---
-        const CHAVE_PADRAO = "AQ.Ab8RN6KOhwbn0k44gReOc736oz1L0WCO64gc39gjtvXj0oR0cw";
-
-        function saveApiKey(key) {
-            localStorage.setItem('gemini_api_key', key.trim());
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            let savedKey = localStorage.getItem('gemini_api_key');
-            if(!savedKey) {
-            savedKey = CHAVE_PADRAO;
-            localStorage.setItem('gemini_api_key', CHAVE_PADRAO);
-            }
-            document.getElementById('gemini-key-input').value = savedKey;
-        });
-
-        async function sendMessageToIA() {
-            const inputElement = document.getElementById('chat-user-input');
-            const messagesBox = document.getElementById('chat-messages-box');
-            const apiKey = localStorage.getItem('gemini_api_key') || CHAVE_PADRAO;
-            let userText = inputElement.value.trim();
-
-            if (!userText) return;
-
-            const userBubble = document.createElement('div');
-            userBubble.className = 'chat-bubble user';
-            userBubble.textContent = userText;
-            messagesBox.appendChild(userBubble);
-            
-            inputElement.value = '';
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-
-            const loadingBubble = document.createElement('div');
-            loadingBubble.className = 'chat-bubble assistant';
-            loadingBubble.innerHTML = '<em>Gemini está processando...</em>';
-            messagesBox.appendChild(loadingBubble);
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-
-            let promptModificado = userText;
-            if (userText.toLowerCase().includes('estudo') || userText.toLowerCase().includes('plano')) {
-            promptModificado = `Aja como um mentor acadêmico moderno para o Kaleb, um estudante de 14 anos do 9º ano que também trabalha com design gráfico. Monte um cronograma/plano focado e direto ao ponto, intercalando matérias escolares com práticas de UI/UX ou artes visuais. Responda em português de forma clara e limpa, usando marcadores para facilitar a leitura. Solicitação dele: ${userText}`;
-            }
-
-            try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
-
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: promptModificado }]
-                }]
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.message);
-            }
-
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
-                const replyText = data.candidates[0].content.parts[0].text;
-                loadingBubble.textContent = replyText;
-            } else {
-                throw new Error("Resposta inválida recebida do Google Gemini.");
-            }
-
-            } catch (error) {
-            loadingBubble.className = 'chat-bubble system-error';
-            loadingBubble.textContent = `Erro na API do Gemini: ${error.message}`;
-            }
-
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-        }
-
-        document.getElementById('chat-user-input').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendMessageToIA();
         });
 
         updateHeaderGreeting();
