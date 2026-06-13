@@ -18,6 +18,22 @@ body {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  opacity: 0;
+  animation: siteEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Animação Cinematográfica de Entrada do Site */
+@keyframes siteEntrance {
+  0% {
+    opacity: 0;
+    filter: blur(15px);
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1);
+  }
 }
 
 /* Customização global das barras de rolagem para o modo escuro */
@@ -33,7 +49,7 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46; 
+  background: #3f3f3f; 
 }
 
 /* ==========================================================================
@@ -47,6 +63,7 @@ body {
   flex-direction: column;
   padding: 24px 16px;
   box-sizing: border-box;
+  z-index: 10;
 }
 
 .sidebar h2 {
@@ -75,39 +92,63 @@ body {
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   text-align: left;
+  position: relative;
 }
 
 .nav-item img {
   width: 20px;
   height: 20px;
   opacity: 0.7;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .nav-item:hover {
-  background: #27272a;
+  background: rgba(39, 39, 42, 0.6);
   color: #fff;
+  transform: translateX(4px);
 }
 
-.nav-item:hover img { opacity: 1; }
+.nav-item:hover img {
+  opacity: 1;
+  transform: scale(1.1);
+}
 
 .nav-item.active {
   background: #27272a;
   color: #fff;
-  border-left: 3px solid #f4f4f5;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 3px;
+  background: #f4f4f5;
+  opacity: 0;
+  transform: scaleY(0.3);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-item.active::after {
+  opacity: 1;
+  transform: scaleY(1);
 }
 
 .nav-item.active img { opacity: 1; }
 
 /* ==========================================================================
-   ÁREA PRINCIPAL E PÁGINAS
+   ÁREA PRINCIPAL E PÁGINAS (Efeitos de transição cinematográfica de abas)
    ========================================================================== */
 .main-content {
   flex-grow: 1;
   overflow-y: auto;
   position: relative;
+  background: radial-gradient(circle at top right, rgba(24, 24, 27, 0.3), transparent 60%);
 }
 
 .page {
@@ -115,10 +156,27 @@ body {
   max-width: 1100px;
   margin: auto;
   padding: 40px;
-  animation: fadeIn 0.3s ease;
+  opacity: 0;
 }
 
-.page.active { display: block; }
+/* Transição com Deslocamento e Blur na troca de abas */
+.page.active {
+  display: block;
+  animation: tabEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tabEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
 
 header {
   display: flex;
@@ -151,12 +209,21 @@ h1 {
 }
 
 .dash-widget {
-  background: #18181b;
-  border: 1px solid #27272a;
+  background: rgba(24, 24, 27, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(39, 39, 42, 0.8);
   border-radius: 14px;
   padding: 24px;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+}
+
+.dash-widget:hover {
+  border-color: rgba(63, 63, 70, 0.8);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7);
 }
 
 .dash-widget h3 {
@@ -182,6 +249,7 @@ h1 {
   resize: none;
   box-sizing: border-box;
   outline: none;
+  transition: border-color 0.2s ease;
 }
 .dash-widget textarea:focus { border-color: #71717a; }
 
@@ -198,6 +266,11 @@ h1 {
   font-size: 13px;
   padding-bottom: 8px;
   border-bottom: 1px solid #27272a;
+  transition: background 0.2s ease, padding-left 0.2s ease;
+}
+.recent-item:hover {
+  background: rgba(39, 39, 42, 0.2);
+  padding-left: 4px;
 }
 .recent-name { color: #e4e4e7; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .recent-date { color: #71717a; font-size: 11px; }
@@ -222,7 +295,10 @@ h1 {
   color: #fff;
   font-size: 13px;
   outline: none;
+  transition: border-color 0.2s;
 }
+.todo-input-row input:focus { border-color: #52525b; }
+
 .todo-input-row button {
   background: #f4f4f5;
   color: #09090b;
@@ -231,7 +307,11 @@ h1 {
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
 }
+.todo-input-row button:hover { background: #e4e4e7; }
+.todo-input-row button:active { transform: scale(0.92); }
+
 .todo-list {
   list-style: none;
   padding: 0;
@@ -244,7 +324,7 @@ h1 {
   padding-right: 4px;
 }
 
-/* Estilização da barra de rolagem específica das Tarefas */
+/* Estilização da barra de rolagem preta nas Tarefas */
 .todo-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -270,7 +350,19 @@ h1 {
   border-radius: 6px;
   border: 1px solid #27272a;
   font-size: 13px;
+  animation: itemEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: border-color 0.2s, transform 0.2s;
 }
+.todo-item:hover {
+  border-color: #3f3f46;
+  transform: translateX(2px);
+}
+
+@keyframes itemEntrance {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
 .todo-item .left-side {
   display: flex;
   align-items: center;
@@ -283,6 +375,7 @@ h1 {
 .todo-item.done span {
   text-decoration: line-through;
   color: #71717a;
+  transition: color 0.3s ease;
 }
 .todo-del-btn {
   background: transparent;
@@ -290,7 +383,10 @@ h1 {
   color: #f43f5e;
   cursor: pointer;
   font-size: 12px;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
+.todo-del-btn:hover { opacity: 1; transform: scale(1.15); }
 
 /* Métricas Pomodoro */
 .pomo-stats-box {
@@ -301,6 +397,7 @@ h1 {
   font-size: 36px;
   font-weight: 700;
   color: #fff;
+  animation: pulseNumber 2s infinite ease-in-out;
 }
 .pomo-stats-box .lbl {
   font-size: 12px;
@@ -308,17 +405,25 @@ h1 {
   margin-top: 4px;
 }
 
+@keyframes pulseNumber {
+  0%, 100% { opacity: 1; text-shadow: 0 0 0px transparent; }
+  50% { opacity: 0.9; text-shadow: 0 0 12px rgba(255,255,255,0.1); }
+}
+
 /* ==========================================================================
    POMODORO UI
    ========================================================================== */
 .pomodoro-container {
-  background: #18181b;
+  background: rgba(24, 24, 27, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid #27272a;
   border-radius: 20px;
   padding: 40px;
   text-align: center;
   max-width: 400px;
   margin: 40px auto;
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
 }
 
 .timer-display {
@@ -327,6 +432,7 @@ h1 {
   font-variant-numeric: tabular-nums;
   margin: 20px 0;
   color: #fff;
+  letter-spacing: -2px;
 }
 
 .pomodoro-controls {
@@ -342,14 +448,19 @@ h1 {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s;
 }
 
-.btn-pomo:active { transform: scale(0.95); }
+.btn-pomo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.btn-pomo:active { transform: translateY(1px) scale(0.97); }
+
 .btn-primary { background: #f4f4f5; color: #09090b; }
 .btn-primary:hover { background: #e4e4e7; }
 .btn-outline { background: transparent; border: 1px solid #3f3f46; color: #e4e4e7; }
-.btn-outline:hover { background: #27272a; }
+.btn-outline:hover { background: #27272a; border-color: #52525b; }
 
 /* ==========================================================================
    INTERFACE DO CHAT DE IA (GEMINI)
@@ -362,6 +473,7 @@ h1 {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
 }
 
 .chat-messages {
@@ -373,7 +485,7 @@ h1 {
   gap: 16px;
 }
 
-/* Barra de rolagem escura para o Chat */
+/* Barra de rolagem preta para o Chat */
 .chat-messages::-webkit-scrollbar {
   width: 6px;
 }
@@ -393,6 +505,16 @@ h1 {
   font-size: 14px;
   line-height: 1.5;
   word-break: break-word;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  animation: bubbleEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bubbleEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .chat-bubble.user {
@@ -436,6 +558,7 @@ h1 {
   color: #fff;
   font-size: 14px;
   outline: none;
+  transition: border-color 0.2s;
 }
 .chat-input-area input:focus { border-color: #71717a; }
 
@@ -475,24 +598,31 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.iconBtn:hover { background: #27272a; border-color: #3f3f46; transform: scale(1.05); }
+.iconBtn:hover { background: #27272a; border-color: #3f3f46; transform: scale(1.08) rotate(90deg); }
 
 .menu {
   position: absolute;
   right: 0;
   top: 52px;
-  background: #18181b;
+  background: rgba(24, 24, 27, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid #27272a;
   border-radius: 12px;
   display: none;
   flex-direction: column;
   padding: 6px;
   z-index: 100;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6);
   min-width: 140px;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
 }
+.menu.show { display: flex; transform: translateY(0); opacity: 1; }
+
 .menu button {
   background: none;
   border: none;
@@ -505,9 +635,9 @@ h1 {
   font-size: 14px;
   border-radius: 8px;
   text-align: left;
-  transition: background 0.15s ease;
+  transition: background 0.2s, transform 0.15s;
 }
-.menu button:hover { background: #27272a; color: #fff; }
+.menu button:hover { background: rgba(255,255,255,0.06); color: #fff; transform: translateX(2px); }
 
 .grid {
   display: grid;
@@ -523,13 +653,17 @@ h1 {
   display: flex;
   flex-direction: column;
   opacity: 0;
-  transform: translateY(16px);
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transform: translateY(20px);
+  animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
-.card:hover { border-color: #3f3f46; transform: translateY(-2px); }
+.card:hover { 
+  border-color: #444449; 
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0,0,0,0.7);
+}
 
-@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes cardEntrance { to { opacity: 1; transform: translateY(0); } }
 
 .dots-btn {
   position: absolute;
@@ -538,8 +672,9 @@ h1 {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(24, 24, 27, 0.8);
+  background: rgba(24, 24, 27, 0.7);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid #27272a;
   color: #a1a1aa;
   font-size: 16px;
@@ -550,13 +685,15 @@ h1 {
   z-index: 10;
   transition: all 0.2s;
 }
-.dots-btn:hover { background: #27272a; color: #fff; border-color: #3f3f46; }
+.dots-btn:hover { background: #27272a; color: #fff; border-color: #3f3f46; transform: scale(1.05); }
 
 .card-menu {
   position: absolute;
   top: 46px;
   right: 10px;
-  background: #1c1c1f;
+  background: rgba(28, 28, 31, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid #27272a;
   border-radius: 10px;
   display: none;
@@ -577,7 +714,7 @@ h1 {
   text-align: left;
   transition: background 0.15s;
 }
-.card-menu button:hover { background: #27272a; color: #fff; }
+.card-menu button:hover { background: rgba(255,255,255,0.06); color: #fff; }
 .card-menu .delete-opt { color: #f43f5e; }
 .card-menu .delete-opt:hover { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
 
@@ -596,10 +733,12 @@ h1 {
   height: 100%;
   object-fit: cover;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.preview img.real:hover { transform: scale(1.05); }
-.iconFile { width: 44px; height: 44px; object-fit: contain; opacity: 0.8; }
+.preview img.real:hover { transform: scale(1.06); }
+.iconFile { width: 44px; height: 44px; object-fit: contain; opacity: 0.8; transition: transform 0.3s; }
+.card:hover .iconFile { transform: scale(1.1); }
+
 .preview-text {
   padding: 20px;
   font-size: 13px;
@@ -614,17 +753,19 @@ h1 {
 }
 .zoom-hint {
   position: absolute;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 11px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transform: translateY(5px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   bottom: 10px;
 }
-.preview:hover .zoom-hint { opacity: 1; }
+.preview:hover .zoom-hint { opacity: 1; transform: translateY(0); }
 
 .card-body { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; }
 .card-title { font-size: 14px; font-weight: 500; color: #e4e4e7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -641,17 +782,27 @@ h1 {
   word-break: break-word;
 }
 
-/* MODAIS */
+/* MODAIS COM ANIMAÇÃO BLUR CINEMATOGRÁFICA */
 .modal-bg {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 999;
+  opacity: 0;
+  transition: backdrop-filter 0.4s ease, opacity 0.4s ease;
 }
+
+.modal-bg.show {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 1;
+}
+
 .modal {
   width: 90%;
   max-width: 500px;
@@ -659,8 +810,17 @@ h1 {
   border: 1px solid #27272a;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+  transform: translateY(30px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
+
+.modal-bg.show .modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
 .modal h3 { margin: 0 0 16px 0; font-size: 18px; font-weight: 600; }
 .modal textarea, .modal input[type="text"] {
   width: 100%;
@@ -692,8 +852,10 @@ h1 {
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
 }
+.modal-actions button:active, .btn-secondary:active { transform: scale(0.96); }
+
 .btn-cancel { background: transparent; color: #a1a1aa; }
 .btn-cancel:hover { color: #fff; }
 .save { background: #f4f4f5; color: #09090b; }
@@ -701,16 +863,24 @@ h1 {
 .btn-secondary { background: #27272a; color: #e4e4e7; margin-top: 8px; width: 100%; }
 .btn-secondary:hover { background: #3f3f46; color: #fff; }
 
-#imageViewer { flex-direction: column; }
+#imageViewer { flex-direction: column; background: rgba(0,0,0,0.85); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 #previewExpanded {
   max-width: 90vw;
   max-height: 85vh;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9);
+  transform: scale(0.92);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
 }
-.close-viewer { position: absolute; top: 20px; right: 30px; color: #a1a1aa; font-size: 36px; cursor: pointer; transition: color 0.2s; }
-.close-viewer:hover { color: #fff; }
+#imageViewer.show #previewExpanded {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.close-viewer { position: absolute; top: 20px; right: 30px; color: #a1a1aa; font-size: 36px; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+.close-viewer:hover { color: #fff; transform: scale(1.1); }
 </style>
 </head>
 
@@ -893,6 +1063,11 @@ h1 {
 </div>
 
 <script>
+  // Exibe a opacidade do corpo do site após carregar o layout
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '1';
+  });
+
   // --- NAVEGAÇÃO SPA ---
   function switchPage(pageId, btnElement) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -1008,7 +1183,7 @@ h1 {
     if(e.key === 'Enter') addTodo();
   });
 
-  // --- LÓGICA DO CHAT DE IA (ATUALIZADO PARA O NOVO PADRÃO DE CHAVES BEARER TOKEN) ---
+  // --- LÓGICA DO CHAT DE IA ---
   const CHAVE_PADRAO = "AQ.Ab8RN6KOhwbn0k44gReOc736oz1L0WCO64gc39gjtvXj0oR0cw";
 
   function saveApiKey(key) {
@@ -1032,7 +1207,6 @@ h1 {
 
     if (!userText) return;
 
-    // Adiciona a pergunta do usuário na interface
     const userBubble = document.createElement('div');
     userBubble.className = 'chat-bubble user';
     userBubble.textContent = userText;
@@ -1041,21 +1215,18 @@ h1 {
     inputElement.value = '';
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    // Coloca balão de carregamento provisório
     const loadingBubble = document.createElement('div');
     loadingBubble.className = 'chat-bubble assistant';
     loadingBubble.innerHTML = '<em>Gemini está processando...</em>';
     messagesBox.appendChild(loadingBubble);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    // Engenharia de prompt embutida discreta para ajudar o Kaleb (estudos + design)
     let promptModificado = userText;
     if (userText.toLowerCase().includes('estudo') || userText.toLowerCase().includes('plano')) {
       promptModificado = `Aja como um mentor acadêmico moderno para o Kaleb, um estudante de 14 anos do 9º ano que também trabalha com design gráfico. Monte um cronograma/plano focado e direto ao ponto, intercalando matérias escolares com práticas de UI/UX ou artes visuais. Responda em português de forma clara e limpa, usando marcadores para facilitar a leitura. Solicitação dele: ${userText}`;
     }
 
     try {
-      // Ajustado para o novo padrão de cabeçalho do Google Cloud/Studio para chaves "AQ."
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
 
       const response = await fetch(url, {
@@ -1096,7 +1267,6 @@ h1 {
     if(e.key === 'Enter') sendMessageToIA();
   });
 
-  // Inicializações Locais
   updateHeaderGreeting();
   renderTodos();
   document.getElementById('pomo-sessions-count').textContent = localStorage.getItem('pomo_sessions') || '0';
@@ -1141,7 +1311,7 @@ function formatDate(dateString) {
 
 document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
-  menu.style.display = menu.style.display==="flex"?"none":"flex";
+  menu.classList.toggle("show");
 };
 
 window.toggleCardMenu = (event, id) => {
@@ -1150,7 +1320,7 @@ window.toggleCardMenu = (event, id) => {
   document.querySelectorAll('.card-menu').forEach(m => {
     if(m !== targetMenu) m.style.display = 'none';
   });
-  menu.style.display = 'none';
+  menu.classList.remove("show");
   if(targetMenu) {
     targetMenu.style.display = targetMenu.style.display === 'flex' ? 'none' : 'flex';
   }
@@ -1158,31 +1328,44 @@ window.toggleCardMenu = (event, id) => {
 
 document.addEventListener("click",(e)=>{
   if(!menu.contains(e.target) && e.target.id!=="plus"){
-    menu.style.display="none";
+    menu.classList.remove("show");
   }
   if(!e.target.classList.contains('dots-btn')) {
     document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
   }
 });
 
+// Funções Helpers para gerenciar modais com classe CSS animada
+function showModalElement(id) {
+  const modalBg = document.getElementById(id);
+  modalBg.style.display = "flex";
+  setTimeout(() => { modalBg.classList.add("show"); }, 10);
+}
+
+function hideModalElement(id) {
+  const modalBg = document.getElementById(id);
+  modalBg.classList.remove("show");
+  setTimeout(() => { modalBg.style.display = "none"; }, 400);
+}
+
 window.openModal=()=>{
-  menu.style.display="none";
-  document.getElementById("modal").style.display="flex";
-  setTimeout(()=>{ document.getElementById("textInput").focus(); },100);
+  menu.classList.remove("show");
+  showModalElement("modal");
+  setTimeout(()=>{ document.getElementById("textInput").focus(); },200);
 };
 
-window.closeModal=()=>{ document.getElementById("modal").style.display="none"; };
+window.closeModal=()=>{ hideModalElement("modal"); };
 
 window.openEditModal=(id, encodedContent, columnName)=>{
   currentEditingId = id;
   currentEditingColumn = columnName || 'id';
   document.getElementById("editTextInput").value = decodeURIComponent(encodedContent);
-  document.getElementById("editModal").style.display="flex";
-  setTimeout(()=>{ document.getElementById("editTextInput").focus(); },100);
+  showModalElement("editModal");
+  setTimeout(()=>{ document.getElementById("editTextInput").focus(); },200);
 };
 
 window.closeEditModal=()=>{
-  document.getElementById("editModal").style.display="none";
+  hideModalElement("editModal");
   currentEditingId = null;
 };
 
@@ -1196,11 +1379,11 @@ window.openPropertiesModal = (id, columnName) => {
   document.getElementById("propSize").innerText = formatBytes(item.tamanho);
   document.getElementById("propDate").innerText = formatDate(item.criado_em);
   document.getElementById("propType").innerText = item.tipo || "Desconhecido";
-  document.getElementById("propertiesModal").style.display = "flex";
+  showModalElement("propertiesModal");
 };
 
 window.closePropertiesModal = () => {
-  document.getElementById("propertiesModal").style.display = "none";
+  hideModalElement("propertiesModal");
   currentPropertiesId = null;
 };
 
@@ -1214,12 +1397,12 @@ document.getElementById("btnCopyLink").onclick = () => {
 
 window.openViewer=(url)=>{
   document.getElementById("previewExpanded").src = url;
-  document.getElementById("imageViewer").style.display="flex";
+  showModalElement("imageViewer");
 };
 
 window.closeViewer=()=>{
-  document.getElementById("imageViewer").style.display="none";
-  document.getElementById("previewExpanded").src = ""; 
+  hideModalElement("imageViewer");
+  setTimeout(() => { document.getElementById("previewExpanded").src = ""; }, 400);
 };
 
 window.forceDownload = async (url, filename) => {
@@ -1339,7 +1522,7 @@ window.saveProperties=async()=>{
 };
 
 window.selectFile=()=>{
-  menu.style.display="none";
+  menu.classList.remove("show");
   fileInput.click();
 };
 
@@ -1408,7 +1591,7 @@ async function load(){
     data.forEach((item,i)=>{
       const div=document.createElement("div");
       div.className="card";
-      div.style.animationDelay = `${i * 50}ms`;
+      div.style.animationDelay = `${i * 45}ms`;
       const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
       const itemId = item[idColumnName];
 
