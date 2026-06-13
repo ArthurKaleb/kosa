@@ -59,7 +59,7 @@ h1 {
   transform: scale(1.05);
 }
 
-/* MENU SUSPENSO */
+/* MENU SUSPENSO PRINCIPAL (+) */
 .menu {
   position: absolute;
   right: 0;
@@ -70,7 +70,7 @@ h1 {
   display: none;
   flex-direction: column;
   padding: 6px;
-  z-index: 10;
+  z-index: 100;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
   min-width: 140px;
 }
@@ -102,8 +102,9 @@ h1 {
   gap: 20px;
 }
 
-/* CARDS COM ANIMAÇÃO E HOVER REFINADO */
+/* CARDS COM POSITION RELATIVE PARA OS 3 PONTINHOS */
 .card {
+  position: relative;
   background: #18181b;
   border: 1px solid #27272a;
   border-radius: 14px;
@@ -128,9 +129,78 @@ h1 {
   }
 }
 
+/* BOTÃO DOS 3 PONTINHOS (⋮) */
+.dots-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.dots-btn:hover {
+  background: #27272a;
+  color: #fff;
+  border-color: #3f3f46;
+}
+
+/* MENU SUSPENSO INTERNO DE CADA CARD */
+.card-menu {
+  position: absolute;
+  top: 46px;
+  right: 10px;
+  background: #1c1c1f;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  padding: 4px;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  min-width: 130px;
+}
+
+.card-menu button {
+  background: none;
+  border: none;
+  color: #e4e4e7;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 6px;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.card-menu button:hover {
+  background: #27272a;
+  color: #fff;
+}
+
+.card-menu .delete-opt {
+  color: #f43f5e;
+}
+.card-menu .delete-opt:hover {
+  background: #p43f5e;
+  background: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+}
+
 /* PREVIEW DO CARD */
 .preview {
-  height: 135px;
+  height: 145px;
   background: #09090b;
   display: flex;
   align-items: center;
@@ -162,8 +232,8 @@ h1 {
 /* PREVIEW PARA NOTAS DE TEXTO */
 .preview-text {
   padding: 20px;
-  font-size: 14px;
-  color: #a1a1aa;
+  font-size: 13px;
+  color: #71717a;
   font-style: italic;
   text-align: center;
   display: -webkit-box;
@@ -184,6 +254,7 @@ h1 {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease;
+  bottom: 10px;
 }
 
 .preview:hover .zoom-hint {
@@ -196,7 +267,6 @@ h1 {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: space-between;
 }
 
 .card-title {
@@ -206,14 +276,12 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: 12px;
 }
 
 .card-text {
   font-size: 13px;
   color: #e4e4e7;
   line-height: 1.5;
-  margin-bottom: 12px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -221,65 +289,6 @@ h1 {
   text-overflow: ellipsis;
   white-space: pre-wrap;
   word-break: break-word;
-}
-
-.card-actions {
-  display: flex;
-  gap: 6px;
-  margin-top: auto;
-}
-
-/* BOTÕES GERAIS */
-button, .btn-link {
-  border: none;
-  padding: 8px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.view {
-  background: #27272a;
-  color: #e4e4e7;
-  flex-grow: 1;
-}
-.view:hover {
-  background: #3f3f46;
-  color: #fff;
-}
-
-.download {
-  background: #f4f4f5;
-  color: #09090b;
-  flex-grow: 1;
-}
-.download:hover { background: #e4e4e7; }
-
-.edit-btn {
-  background: #27272a;
-  color: #e4e4e7;
-  flex-grow: 1;
-}
-.edit-btn:hover {
-  background: #3f3f46;
-  color: #fff;
-}
-
-.delete {
-  background: transparent;
-  border: 1px solid #3f3f46;
-  color: #f43f5e;
-}
-.delete:hover { 
-  background: #f43f5e; 
-  color: #fff; 
-  border-color: #f43f5e;
 }
 
 /* ==========================================================================
@@ -343,6 +352,11 @@ button, .btn-link {
 .modal-actions button {
   padding: 10px 16px;
   font-size: 13px;
+  border: none;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .btn-cancel {
@@ -450,21 +464,43 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// Variáveis dinâmicas para a edição
+// Armazenamento local temporário para evitar falhas de aspas no HTML
+let cacheItens = [];
 let currentEditingId = null;
 let currentEditingColumn = 'id';
 
 /* ===========================
-   MENU E MODAIS
+   MENU E MODAIS DOS CARDS
 =========================== */
 document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
   menu.style.display = menu.style.display==="flex"?"none":"flex";
 };
 
+// Controla abertura e fechamento de todos os menus suspensos
+window.toggleCardMenu = (event, id) => {
+  event.stopPropagation();
+  const targetMenu = document.getElementById(`menu-${id}`);
+  
+  // Fecha qualquer outro menu de card aberto
+  document.querySelectorAll('.card-menu').forEach(m => {
+    if(m !== targetMenu) m.style.display = 'none';
+  });
+  // Fecha o menu principal de adicionar
+  menu.style.display = 'none';
+
+  if(targetMenu) {
+    targetMenu.style.display = targetMenu.style.display === 'flex' ? 'none' : 'flex';
+  }
+};
+
 document.addEventListener("click",(e)=>{
   if(!menu.contains(e.target) && e.target.id!=="plus"){
     menu.style.display="none";
+  }
+  // Se clicar fora, esconde os menus dos cards
+  if(!e.target.classList.contains('dots-btn')) {
+    document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
   }
 });
 
@@ -480,7 +516,6 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
-// Agora recebe a coluna dinamicamente e decodifica o texto com segurança
 window.openEditModal=(id, encodedContent, columnName)=>{
   currentEditingId = id;
   currentEditingColumn = columnName || 'id';
@@ -534,6 +569,46 @@ window.forceDownload = async (url, filename) => {
 };
 
 /* ===========================
+   FUNCIONALIDADES COPIAR E COLAR
+=========================== */
+window.copyText = (id) => {
+  const item = cacheItens.find(i => i.id === id || i.uuid === id);
+  if(item && item.content) {
+    navigator.clipboard.writeText(item.content)
+      .then(() => alert("Texto copiado com sucesso!"))
+      .catch(err => console.error("Erro ao copiar: ", err));
+  }
+};
+
+window.pasteText = async (id, columnName) => {
+  try {
+    const textDoClipboard = await navigator.clipboard.readText();
+    if(!textDoClipboard.trim()) {
+      alert("A sua área de transferência está vazia ou não contém um texto válido.");
+      return;
+    }
+
+    const novoTitulo = textDoClipboard.substring(0, 20).trim() || "Bloco de Notas";
+
+    const { error } = await supabase
+      .from(TABLE)
+      .update({ 
+        content: textDoClipboard,
+        nome: novoTitulo,
+        tamanho: textDoClipboard.length
+      })
+      .eq(columnName, id);
+
+    if (error) throw error;
+    load();
+    
+  } catch (err) {
+    alert("Erro ao colar do sistema. Certifique-se de dar permissão ao navegador.");
+    console.error(err);
+  }
+};
+
+/* ===========================
    TEXTO E ARQUIVOS (CRUD)
 =========================== */
 window.saveText=async()=>{
@@ -563,7 +638,6 @@ window.saveText=async()=>{
   }
 };
 
-// Edita usando a coluna que foi identificada automaticamente pelo load()
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
   if(!newText.trim() || !currentEditingId) return;
@@ -633,15 +707,15 @@ async function load(){
 
     grid.innerHTML="";
     if(!data) return;
+    
+    // Atualiza o cache local
+    cacheItens = data;
 
     data.forEach((item,i)=>{
       const div=document.createElement("div");
       div.className="card";
-      div.style.animationDelay = `${i * 80}ms`;
+      div.style.animationDelay = `${i * 60}ms`;
 
-      // ----------------------------------------------------------------------
-      // MAGIA ACONTECENDO AQUI: Identifica automaticamente a sua coluna de ID
-      // ----------------------------------------------------------------------
       const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
       const itemId = item[idColumnName];
 
@@ -649,6 +723,14 @@ async function load(){
         const isImage = item.tipo?.startsWith("image/");
         
         div.innerHTML=`
+          <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
+          
+          <div class="card-menu" id="menu-${itemId}">
+            <button onclick="window.open('${item.url}', '_blank')">Ver</button>
+            <button onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
+            <button class="delete-opt" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
+          </div>
+
           <div class="preview">
             ${isImage
               ? `<img class="real" src="${item.url}" onclick="openViewer('${item.url}')">
@@ -657,27 +739,26 @@ async function load(){
           </div>
           <div class="card-body">
             <div class="card-title" title="${item.nome}">${item.nome}</div>
-            <div class="card-actions">
-              <button class="view" onclick="window.open('${item.url}', '_blank')">Ver</button>
-              <button class="download" onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
-              <button class="delete" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
-            </div>
           </div>
         `;
       } else {
-        // Criptografia leve para impedir que quebras de linha quebrem o botão
         const safeContent = encodeURIComponent(item.content || "");
 
         div.innerHTML=`
+          <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
+          
+          <div class="card-menu" id="menu-${itemId}">
+            <button onclick="openEditModal('${itemId}', '${safeContent}', '${idColumnName}')">Editar</button>
+            <button onclick="copyText('${itemId}')">Copiar</button>
+            <button onclick="pasteText('${itemId}', '${idColumnName}')">Colar</button>
+            <button class="delete-opt" onclick="del('${itemId}','', '${idColumnName}')">Excluir</button>
+          </div>
+
           <div class="preview">
             <div class="preview-text">${item.content || ""}</div>
           </div>
           <div class="card-body">
             <div class="card-text">${item.content || ""}</div>
-            <div class="card-actions">
-              <button class="edit-btn" onclick="openEditModal('${itemId}', '${safeContent}', '${idColumnName}')">Editar</button>
-              <button class="delete" onclick="del('${itemId}','', '${idColumnName}')">Excluir</button>
-            </div>
           </div>
         `;
       }
@@ -688,7 +769,6 @@ async function load(){
   }
 }
 
-// O Delete também recebe a coluna dinamicamente
 window.del=async(id, path, columnName = 'id')=>{
   try {
     if(path && path.trim() !== "" && path !== "text-note"){
