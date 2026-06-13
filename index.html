@@ -159,6 +159,20 @@ h1 {
   opacity: 0.8;
 }
 
+/* PREVIEW BONITO PARA NOTAS DE TEXTO */
+.preview-text {
+  padding: 20px;
+  font-size: 14px;
+  color: #a1a1aa;
+  font-style: italic;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
 /* LUPA SOBRE A IMAGEM DE PRÉVIA */
 .zoom-hint {
   position: absolute;
@@ -197,7 +211,7 @@ h1 {
 
 .card-text {
   font-size: 13px;
-  color: #a1a1aa;
+  color: #e4e4e7;
   line-height: 1.5;
   margin-bottom: 12px;
   display: -webkit-box;
@@ -493,17 +507,25 @@ window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
 
-  try {
-    await supabase.from(TABLE).insert({
-      tipo_item:"text",
-      content:text,
-      criado_em:new Date()
-    });
+  // Corrigido adicionando tamanho: null conforme a estrutura real da tabela
+  const { error } = await supabase.from(TABLE).insert({
+    tipo_item: "text",
+    content: text,
+    nome: null,
+    tipo: null,
+    tamanho: null,
+    url: null,
+    caminho: null,
+    criado_em: new Date()
+  });
+
+  if (error) {
+    alert("Erro do Supabase ao salvar texto: " + error.message);
+    console.error(error);
+  } else {
     document.getElementById("textInput").value="";
     closeModal();
     load();
-  } catch (error) {
-    console.error("Erro ao salvar texto:", error);
   }
 };
 
@@ -516,19 +538,26 @@ fileInput.onchange=async(e)=>{
   for(let file of e.target.files){
     const path=`${Date.now()}_${file.name}`;
     try {
-      await supabase.storage.from(BUCKET).upload(path,file);
+      const uploadRes = await supabase.storage.from(BUCKET).upload(path,file);
+      if(uploadRes.error) throw uploadRes.error;
+
       const {data}=supabase.storage.from(BUCKET).getPublicUrl(path);
 
-      await supabase.from(TABLE).insert({
+      const insertRes = await supabase.from(TABLE).insert({
         nome:file.name,
         tipo:file.type,
+        tamanho: file.size, // Passando o tamanho real do arquivo
         url:data.publicUrl,
         caminho:path,
         tipo_item:"file",
+        content: null,
         criado_em:new Date()
       });
+      if(insertRes.error) throw insertRes.error;
+
     } catch (error) {
-      console.error("Erro no upload de arquivo:", error);
+      alert("Erro no arquivo: " + error.message);
+      console.error(error);
     }
   }
   load();
@@ -536,10 +565,12 @@ fileInput.onchange=async(e)=>{
 
 async function load(){
   try {
-    const {data}=await supabase
+    const {data, error}=await supabase
     .from(TABLE)
     .select("*")
     .order("criado_em",{ascending:false});
+
+    if(error) throw error;
 
     grid.innerHTML="";
     if(!data) return;
@@ -548,6 +579,9 @@ async function load(){
       const div=document.createElement("div");
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
+
+      // Armazena o ID correto baseado na coluna da sua tabela (uuid)
+      const itemId = item.uuid;
 
       if(item.tipo_item==="file"){
         const isImage = item.tipo?.startsWith("image/");
@@ -564,19 +598,20 @@ async function load(){
             <div class="card-actions">
               <button class="view" onclick="window.open('${item.url}', '_blank')">Ver</button>
               <button class="download" onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
-              <button class="delete" onclick="del('${item.id}','${item.caminho || ''}')">Excluir</button>
+              <button class="delete" onclick="del('${itemId}','${item.caminho || ''}')">Excluir</button>
             </div>
           </div>
         `;
       } else {
+        // Renderização otimizada para blocos de notas (mostra o texto na prévia)
         div.innerHTML=`
           <div class="preview">
-            <img class="iconFile" src="tx.png">
+            <div class="preview-text">${item.content || ""}</div>
           </div>
           <div class="card-body">
-            <div class="card-text">${item.content}</div>
+            <div class="card-text">${item.content || ""}</div>
             <div class="card-actions">
-              <button class="delete delete-full" onclick="del('${item.id}','')">Excluir Nota</button>
+              <button class="delete delete-full" onclick="del('${itemId}','')">Excluir Nota</button>
             </div>
           </div>
         `;
@@ -593,10 +628,13 @@ window.del=async(id,path)=>{
     if(path && path.trim() !== ""){
       await supabase.storage.from(BUCKET).remove([path]);
     }
-    await supabase.from(TABLE).delete().eq("id",id);
+    // Alterado o filtro de .eq("id", id) para .eq("uuid", id) combinando com a tabela
+    const { error } = await supabase.from(TABLE).delete().eq("uuid", id);
+    if(error) throw error;
     load();
   } catch (error) {
-    console.error("Erro ao deletar item:", error);
+    alert("Erro ao deletar: " + error.message);
+    console.error(error);
   }
 };
 
