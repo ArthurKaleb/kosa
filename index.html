@@ -318,17 +318,17 @@ window.switchPage = (pageId, el) => {
   if(pageId === 'home') updateDashboard();
 };
 
-// DATA ATUAL
+// DATA NA HOME
 const d = new Date();
 document.getElementById('currentDate').innerText = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
 /* ===========================
-   FORMATADORES
+   FORMATADORES AUXILIARES
 =========================== */
 function formatBytes(bytes) {
   if (!bytes || bytes === 0) return '0 Bytes';
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB'];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
@@ -401,7 +401,7 @@ async function load(){
         <button onclick="del('${itemId}', '${item.caminho}')" style="color:#f43f5e">Excluir</button>
       </div>
       <div class="preview">
-        ${isNote ? `<div class="preview-text">${item.content}</div>` : (item.tipo?.startsWith("image") ? `<img src="${item.url}" class="real">` : `<img src="fl.png" width="32" style="opacity:0.5">`)}
+        ${isNote ? `<div class="preview-text">${item.content}</div>` : (item.tipo?.startsWith("image") ? `<img src="${item.url}" class="real">` : `<img src="fl.png" width="32" style="opacity:0.5; object-fit:contain;">`)}
       </div>
       <div class="card-body">
         <div class="card-title">${item.nome || 'Nota'}</div>
