@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive Melhorado</title>
+<title>Drive Final Corrigido</title>
 
 <style>
 body{
@@ -13,7 +13,6 @@ body{
   font-family:Arial;
 }
 
-/* APP */
 .app{
   max-width:1100px;
   margin:auto;
@@ -27,11 +26,11 @@ header{
 }
 
 h1{
-  margin-left:10px;
   font-size:22px;
+  margin-left:10px;
 }
 
-/* BOTÕES */
+/* BOTÃO + */
 .iconBtn{
   width:45px;
   height:45px;
@@ -62,6 +61,13 @@ h1{
   color:#fff;
   padding:12px;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.menu button:hover{
+  background:#222;
 }
 
 /* GRID */
@@ -84,6 +90,7 @@ h1{
   to{opacity:1;transform:translateY(0)}
 }
 
+/* PREVIEW */
 .preview{
   height:140px;
   background:#000;
@@ -91,15 +98,43 @@ h1{
   align-items:center;
   justify-content:center;
   border-radius:10px;
+  overflow:hidden;
 }
 
-img{
+/* PDF / ARQUIVO */
+.iconFile{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  opacity:0.9;
+}
+
+/* IMAGEM REAL */
+.preview img.real{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* BOTÕES */
+/* TEXTO */
+textarea{
+  width:100%;
+  min-height:120px;
+  background:#000;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:10px;
+  padding:10px;
+  resize:none;
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:5px;
+  margin-top:6px;
+}
+
 button,a{
   border:none;
   padding:7px;
@@ -114,17 +149,13 @@ button,a{
 .copy{background:#fff;color:#000}
 .save{background:#333;color:#fff}
 
-/* =========================
-   MODAL DE TEXTO (NOVO)
-========================= */
-
+/* ======================
+   MODAL CORRIGIDO
+====================== */
 .modal-bg{
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
+  inset:0;
+  background:rgba(0,0,0,0.75);
   display:none;
   align-items:center;
   justify-content:center;
@@ -133,21 +164,26 @@ button,a{
 
 .modal{
   width:90%;
-  max-width:500px;
+  max-width:520px;
   background:#111;
+  border-radius:14px;
   padding:20px;
-  border-radius:12px;
+}
+
+.modal h3{
+  margin-top:0;
 }
 
 .modal textarea{
   width:100%;
-  height:150px;
+  height:180px;
   background:#000;
   color:#fff;
   border:1px solid #333;
   border-radius:10px;
-  padding:10px;
-  resize:none;
+  padding:12px;
+  font-size:14px;
+  outline:none;
 }
 
 .modal-actions{
@@ -164,15 +200,20 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive Melhorado</h1>
+  <h1>Drive Final</h1>
 
   <div style="position:relative">
 
     <button class="iconBtn" id="plus">+</button>
 
     <div class="menu" id="menu">
-      <button onclick="selectFile()">Arquivo</button>
-      <button onclick="openTextModal()">Texto</button>
+      <button onclick="selectFile()">
+        <img src="av.png" width="18"> Arquivo
+      </button>
+
+      <button onclick="openModal()">
+        <img src="tx.png" width="18"> Texto
+      </button>
     </div>
 
     <input type="file" id="file" multiple style="display:none">
@@ -183,19 +224,19 @@ button,a{
 
 </div>
 
-<!-- =========================
-     MODAL TEXTO
-========================= -->
+<!-- MODAL TEXTO -->
 <div class="modal-bg" id="modal">
   <div class="modal">
+
     <h3>Escreva seu texto</h3>
 
-    <textarea id="textInput"></textarea>
+    <textarea id="textInput" placeholder="Digite aqui..."></textarea>
 
     <div class="modal-actions">
       <button onclick="closeModal()">Cancelar</button>
       <button class="save" onclick="saveText()">Salvar</button>
     </div>
+
   </div>
 </div>
 
@@ -214,25 +255,19 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-let textBuffer="";
-
 /* MENU */
 document.getElementById("plus").onclick=()=>{
   menu.style.display = menu.style.display==="flex"?"none":"flex";
 };
 
-/* FECHAR MENU */
 document.addEventListener("click",(e)=>{
   if(!menu.contains(e.target) && e.target.id!=="plus"){
     menu.style.display="none";
   }
 });
 
-/* =========================
-   MODAL TEXT
-========================= */
-
-window.openTextModal=()=>{
+/* MODAL */
+window.openModal=()=>{
   document.getElementById("modal").style.display="flex";
 };
 
@@ -242,12 +277,13 @@ window.closeModal=()=>{
 
 window.saveText=async()=>{
 
-  const value=document.getElementById("textInput").value;
-  if(!value) return;
+  const text=document.getElementById("textInput").value;
+
+  if(!text) return;
 
   await supabase.from(TABLE).insert({
     tipo_item:"text",
-    content:value,
+    content:text,
     criado_em:new Date()
   });
 
@@ -256,10 +292,7 @@ window.saveText=async()=>{
   load();
 };
 
-/* =========================
-   UPLOAD
-========================= */
-
+/* FILE UPLOAD */
 window.selectFile=()=>{
   fileInput.click();
 };
@@ -270,13 +303,9 @@ fileInput.onchange=async(e)=>{
 
     const path=`${Date.now()}_${file.name}`;
 
-    await supabase.storage
-    .from(BUCKET)
-    .upload(path,file);
+    await supabase.storage.from(BUCKET).upload(path,file);
 
-    const {data}=supabase.storage
-    .from(BUCKET)
-    .getPublicUrl(path);
+    const {data}=supabase.storage.from(BUCKET).getPublicUrl(path);
 
     await supabase.from(TABLE).insert({
       nome:file.name,
@@ -284,7 +313,6 @@ fileInput.onchange=async(e)=>{
       url:data.publicUrl,
       caminho:path,
       tipo_item:"file",
-      content:"",
       criado_em:new Date()
     });
   }
@@ -292,27 +320,7 @@ fileInput.onchange=async(e)=>{
   load();
 };
 
-/* =========================
-   DOWNLOAD FORÇADO
-========================= */
-
-async function forceDownload(url,name){
-
-  const res=await fetch(url);
-  const blob=await res.blob();
-
-  const link=document.createElement("a");
-  link.href=URL.createObjectURL(blob);
-  link.download=name;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-}
-
-/* =========================
-   LOAD
-========================= */
-
+/* LOAD */
 async function load(){
 
   const {data}=await supabase
@@ -328,31 +336,38 @@ async function load(){
     div.className="card";
     div.style.animationDelay=`${i*120}ms`;
 
+    /* FILE */
     if(item.tipo_item==="file"){
 
       div.innerHTML=`
         <div class="preview">
           ${item.tipo?.startsWith("image/")
-            ? `<img src="${item.url}">`
-            : "📄"}
+            ? `<img class="real" src="${item.url}">`
+            : `<img class="iconFile" src="av.png">`}
         </div>
 
         <div>${item.nome}</div>
 
-        <button class="download" onclick="downloadFile('${item.url}','${item.nome}')">
-          Baixar
-        </button>
-
-        <button class="delete" onclick="del('${item.id}','${item.caminho}')">
-          Excluir
-        </button>
+        <a class="download" href="${item.url}" download>Baixar</a>
+        <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
       `;
     }
 
+    /* TEXT */
     else{
 
       div.innerHTML=`
-        <div>📝 ${item.content}</div>
+        <div class="preview">
+          <img class="iconFile" src="tx.png">
+        </div>
+
+        <textarea id="t-${item.id}">${item.content}</textarea>
+
+        <div class="actions">
+          <button class="copy" onclick="copy('${item.id}')">Copiar</button>
+          <button class="save" onclick="save('${item.id}')">Salvar</button>
+          <button class="delete" onclick="del('${item.id}','')">Excluir</button>
+        </div>
       `;
     }
 
@@ -360,12 +375,21 @@ async function load(){
   });
 }
 
-/* DOWNLOAD */
-window.downloadFile=(url,name)=>{
-  forceDownload(url,name);
+/* TEXT ACTIONS */
+window.copy=(id)=>{
+  const t=document.getElementById("t-"+id);
+  navigator.clipboard.writeText(t.value);
 };
 
-/* DELETE */
+window.save=async(id)=>{
+  const t=document.getElementById("t-"+id);
+
+  await supabase
+  .from(TABLE)
+  .update({content:t.value})
+  .eq("id",id);
+};
+
 window.del=async(id,path)=>{
 
   if(path){
