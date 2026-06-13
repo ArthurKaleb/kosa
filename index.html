@@ -9,17 +9,22 @@
         /* ==========================================================================
         CONTEÚDO E LAYOUT BASE (Premium Dark UI)
         ========================================================================== */
+        html {
+            height: -webkit-fill-available;
+        }
+
         body {
-        margin: 0;
-        background: #09090b;
-        color: #f4f4f5;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-        opacity: 0;
-        animation: siteEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            margin: 0;
+            background: #09090b;
+            color: #f4f4f5;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            height: 100dvh; /* Altura dinâmica que respeita o navegador mobile */
+            min-height: -webkit-fill-available; /* Fallback para Safari no iOS */
+            overflow: hidden;
+            opacity: 0;
+            animation: siteEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Animação Cinematográfica de Entrada do Site */
@@ -887,18 +892,24 @@
         ========================================================================== */
         @media (max-width: 768px) {
             body {
-                flex-direction: column; /* Organiza em coluna no mobile */
+                display: block; /* Remove o flex para lidar melhor com a navbar fixa */
             }
 
             .sidebar {
+                position: fixed; /* Fixa a barra no fundo da tela */
+                bottom: 0;
+                left: 0;
                 width: 100%;
                 height: 70px;
+                padding-bottom: env(safe-area-inset-bottom); /* Área segura do iPhone */
+                background: rgba(24, 24, 27, 0.95); /* Leve transparência para estilo */
+                backdrop-filter: blur(10px); /* Efeito de desfoque */
+                -webkit-backdrop-filter: blur(10px);
                 border-right: none;
                 border-top: 1px solid #27272a;
                 flex-direction: row;
-                padding: 0;
                 justify-content: center;
-                order: 2; /* Joga a barra de navegação para o final da tela */
+                z-index: 9999; /* Garante que fique acima de tudo */
             }
 
             .sidebar h2 {
@@ -906,9 +917,11 @@
             }
 
             .main-content {
-                order: 1; /* Mantém o conteúdo principal no topo */
-                height: calc(100vh - 70px);
-                flex-grow: 0; /* Previne que estique a mais e oculte o scroll */
+                height: 100dvh;
+                overflow-y: auto;
+                /* Dá um espaço no fundo para o conteúdo não ficar escondido atrás da navbar */
+                padding-bottom: calc(90px + env(safe-area-inset-bottom)); 
+                box-sizing: border-box;
             }
 
             .nav-menu {
