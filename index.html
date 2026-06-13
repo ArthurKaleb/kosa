@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive Completo</title>
+<title>Drive com Ícones</title>
 
 <style>
 body{
@@ -34,18 +34,22 @@ h1{font-size:22px}
 }
 
 /* BOTÕES */
-.btn{
+.iconBtn{
   width:45px;
   height:45px;
   border-radius:50%;
-  border:1px solid #333;
   background:#111;
-  color:#fff;
-  font-size:20px;
+  border:1px solid #333;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.btn:hover{background:#fff;color:#000}
+.iconBtn img{
+  width:22px;
+  height:22px;
+}
 
 /* MENU + */
 .menu{
@@ -102,13 +106,13 @@ h1{font-size:22px}
   overflow:hidden;
 }
 
-img,video{
+.preview img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* TEXT AREA */
+/* TEXTO */
 textarea{
   width:100%;
   background:#000;
@@ -116,7 +120,6 @@ textarea{
   border:1px solid #333;
   border-radius:8px;
   padding:8px;
-  resize:none;
 }
 
 /* ACTIONS */
@@ -148,16 +151,17 @@ button,a{
 <div class="app">
 
 <header>
-
-  <h1>Drive Completo</h1>
+  <h1>Drive Ícones</h1>
 
   <div style="position:relative" class="actionsTop">
 
     <!-- NOTIFICAÇÃO -->
-    <button class="btn" id="notif">🔔</button>
+    <button class="iconBtn" id="notif">
+      <img src="nf.png">
+    </button>
 
-    <!-- BOTÃO + -->
-    <button class="btn" id="plus">+</button>
+    <!-- + -->
+    <button class="iconBtn" id="plus">+</button>
 
     <!-- MENU -->
     <div class="menu" id="menu">
@@ -167,7 +171,6 @@ button,a{
 
     <input type="file" id="file" multiple style="display:none">
   </div>
-
 </header>
 
 <div class="grid" id="grid"></div>
@@ -190,9 +193,7 @@ const fileInput=document.getElementById("file");
 const menu=document.getElementById("menu");
 const plus=document.getElementById("plus");
 
-/* ======================
-   MENU +
-====================== */
+/* MENU */
 plus.onclick=()=>{
   menu.style.display = menu.style.display==="flex" ? "none":"flex";
 };
@@ -203,11 +204,9 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-/* ======================
-   NOTIFICAÇÃO (visual só)
-====================== */
+/* NOTIF BOTÃO */
 document.getElementById("notif").onclick=()=>{
-  alert("Notificações ainda em modo básico");
+  alert("Notificações ativadas (visual)");
 };
 
 /* ======================
@@ -280,7 +279,7 @@ async function load(){
 
     const div=document.createElement("div");
     div.className="card";
-    div.style.animationDelay=`${i*60}ms`;
+    div.style.animationDelay=`${i*50}ms`;
 
     /* FILE */
     if(item.tipo_item==="file"){
@@ -289,17 +288,12 @@ async function load(){
         <div class="preview">
           ${item.tipo?.startsWith("image/")
             ? `<img src="${item.url}">`
-            : item.tipo?.startsWith("video/")
-            ? `<video src="${item.url}" controls></video>`
-            : "📄"}
+            : `<img src="av.png">`}
         </div>
 
         <div>${item.nome}</div>
 
-        <div class="actions">
-          <a class="download" href="${item.url}" download>Baixar</a>
-          <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
-        </div>
+        <a class="download" href="${item.url}" download>Baixar</a>
       `;
     }
 
@@ -307,12 +301,16 @@ async function load(){
     else{
 
       div.innerHTML=`
+        <div class="preview">
+          <img src="tx.png" style="width:40px;height:40px">
+        </div>
+
         <textarea id="t-${item.id}">${item.content}</textarea>
 
         <div class="actions">
           <button class="copy" onclick="copy('${item.id}')">Copiar</button>
           <button class="save" onclick="save('${item.id}')">Salvar</button>
-          <button class="delete" onclick="del('${item.id}')">Excluir</button>
+          <button class="delete" onclick="del('${item.id}','')">Excluir</button>
         </div>
       `;
     }
@@ -321,9 +319,7 @@ async function load(){
   });
 }
 
-/* ======================
-   TEXT ACTIONS
-====================== */
+/* TEXT ACTIONS */
 window.copy=(id)=>{
   const t=document.getElementById("t-"+id);
   navigator.clipboard.writeText(t.value);
@@ -338,9 +334,6 @@ window.save=async(id)=>{
   .eq("id",id);
 };
 
-/* ======================
-   DELETE (VOLTOU COMPLETO)
-====================== */
 window.del=async(id,path)=>{
 
   if(path){
