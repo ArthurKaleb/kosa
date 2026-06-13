@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mini Drive by Kaleb</title>
+<title>Assistente Pessoal by Kaleb</title>
 
 <style>
 /* ==========================================================================
@@ -15,12 +15,99 @@ body {
   color: #f4f4f5;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.app {
+/* ==========================================================================
+   SIDEBAR (Menu Lateral)
+   ========================================================================== */
+.sidebar {
+  width: 260px;
+  background: #18181b;
+  border-right: 1px solid #27272a;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+.sidebar h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a1a1aa;
+  margin: 0 0 24px 12px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.nav-item img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.nav-item:hover {
+  background: #27272a;
+  color: #fff;
+}
+
+.nav-item:hover img {
+  opacity: 1;
+}
+
+.nav-item.active {
+  background: #27272a;
+  color: #fff;
+  border-left: 3px solid #f4f4f5;
+}
+
+.nav-item.active img {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   ÁREA PRINCIPAL E PÁGINAS
+   ========================================================================== */
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.page {
+  display: none;
   max-width: 1100px;
   margin: auto;
-  padding: 40px 20px;
+  padding: 40px 40px;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+  display: block;
 }
 
 header {
@@ -31,13 +118,87 @@ header {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.5px;
   margin: 0;
 }
 
-/* BOTÃO ADICIONAR (+) */
+.subtitle {
+  color: #a1a1aa;
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+/* ==========================================================================
+   WIDGETS DA TELA INICIAL
+   ========================================================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.dash-widget {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.dash-widget h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: #a1a1aa;
+}
+
+/* ==========================================================================
+   POMODORO UI
+   ========================================================================== */
+.pomodoro-container {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+.timer-display {
+  font-size: 72px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin: 20px 0;
+  color: #fff;
+}
+
+.pomodoro-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-pomo {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.btn-pomo:active { transform: scale(0.95); }
+.btn-primary { background: #f4f4f5; color: #09090b; }
+.btn-primary:hover { background: #e4e4e7; }
+.btn-outline { background: transparent; border: 1px solid #3f3f46; color: #e4e4e7; }
+.btn-outline:hover { background: #27272a; }
+
+/* ==========================================================================
+   ESTILOS DO MINI DRIVE (Mantidos do original)
+   ========================================================================== */
 .iconBtn {
   width: 42px;
   height: 42px;
@@ -52,14 +213,8 @@ h1 {
   justify-content: center;
   transition: all 0.2s ease;
 }
+.iconBtn:hover { background: #27272a; border-color: #3f3f46; transform: scale(1.05); }
 
-.iconBtn:hover {
-  background: #27272a;
-  border-color: #3f3f46;
-  transform: scale(1.05);
-}
-
-/* MENU SUSPENSO PRINCIPAL (+) */
 .menu {
   position: absolute;
   right: 0;
@@ -74,7 +229,6 @@ h1 {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
   min-width: 140px;
 }
-
 .menu button {
   background: none;
   border: none;
@@ -89,20 +243,13 @@ h1 {
   text-align: left;
   transition: background 0.15s ease;
 }
+.menu button:hover { background: #27272a; color: #fff; }
 
-.menu button:hover {
-  background: #27272a;
-  color: #fff;
-}
-
-/* GRID DE CARDS */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
 }
-
-/* CARDS */
 .card {
   position: relative;
   background: #18181b;
@@ -116,20 +263,10 @@ h1 {
   animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
+.card:hover { border-color: #3f3f46; transform: translateY(-2px); }
 
-.card:hover {
-  border-color: #3f3f46;
-  transform: translateY(-2px);
-}
+@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* BOTÃO DOS 3 PONTINHOS (⋮) */
 .dots-btn {
   position: absolute;
   top: 10px;
@@ -149,14 +286,8 @@ h1 {
   z-index: 10;
   transition: all 0.2s;
 }
+.dots-btn:hover { background: #27272a; color: #fff; border-color: #3f3f46; }
 
-.dots-btn:hover {
-  background: #27272a;
-  color: #fff;
-  border-color: #3f3f46;
-}
-
-/* MENU SUSPENSO INTERNO DE CADA CARD */
 .card-menu {
   position: absolute;
   top: 46px;
@@ -171,7 +302,6 @@ h1 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   min-width: 145px;
 }
-
 .card-menu button {
   background: none;
   border: none;
@@ -183,21 +313,10 @@ h1 {
   text-align: left;
   transition: background 0.15s;
 }
+.card-menu button:hover { background: #27272a; color: #fff; }
+.card-menu .delete-opt { color: #f43f5e; }
+.card-menu .delete-opt:hover { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
 
-.card-menu button:hover {
-  background: #27272a;
-  color: #fff;
-}
-
-.card-menu .delete-opt {
-  color: #f43f5e;
-}
-.card-menu .delete-opt:hover {
-  background: rgba(244, 63, 94, 0.15);
-  color: #f43f5e;
-}
-
-/* PREVIEW DO CARD */
 .preview {
   height: 145px;
   background: #09090b;
@@ -208,7 +327,6 @@ h1 {
   border-bottom: 1px solid #27272a;
   position: relative;
 }
-
 .preview img.real {
   width: 100%;
   height: 100%;
@@ -216,19 +334,8 @@ h1 {
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
-.preview img.real:hover {
-  transform: scale(1.05);
-}
-
-.iconFile {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-  opacity: 0.8;
-}
-
-/* PREVIEW PARA NOTAS DE TEXTO */
+.preview img.real:hover { transform: scale(1.05); }
+.iconFile { width: 44px; height: 44px; object-fit: contain; opacity: 0.8; }
 .preview-text {
   padding: 20px;
   font-size: 13px;
@@ -241,8 +348,6 @@ h1 {
   overflow: hidden;
   line-height: 1.4;
 }
-
-/* LUPA SOBRE A IMAGEM DE PRÉVIA */
 .zoom-hint {
   position: absolute;
   background: rgba(0,0,0,0.6);
@@ -255,28 +360,10 @@ h1 {
   transition: opacity 0.2s ease;
   bottom: 10px;
 }
+.preview:hover .zoom-hint { opacity: 1; }
 
-.preview:hover .zoom-hint {
-  opacity: 1;
-}
-
-/* ÁREA DE TEXTO INTERNA DO CARD */
-.card-body {
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: #e4e4e7;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
+.card-body { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; }
+.card-title { font-size: 14px; font-weight: 500; color: #e4e4e7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card-text {
   font-size: 13px;
   color: #e4e4e7;
@@ -290,9 +377,7 @@ h1 {
   word-break: break-word;
 }
 
-/* ==========================================================================
-   MODAIS
-   ========================================================================== */
+/* MODAIS */
 .modal-bg {
   position: fixed;
   inset: 0;
@@ -303,7 +388,6 @@ h1 {
   justify-content: center;
   z-index: 999;
 }
-
 .modal {
   width: 90%;
   max-width: 500px;
@@ -313,13 +397,7 @@ h1 {
   padding: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
-
-.modal h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
+.modal h3 { margin: 0 0 16px 0; font-size: 18px; font-weight: 600; }
 .modal textarea, .modal input[type="text"] {
   width: 100%;
   background: #09090b;
@@ -334,51 +412,15 @@ h1 {
   font-family: inherit;
   transition: border-color 0.2s;
 }
+.modal textarea { height: 180px; resize: none; }
+.modal textarea:focus, .modal input[type="text"]:focus { border-color: #a1a1aa; }
 
-.modal textarea {
-  height: 180px;
-  resize: none;
-}
+.prop-group { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+.prop-row { display: flex; justify-content: space-between; font-size: 13px; padding-bottom: 8px; border-bottom: 1px solid #27272a; }
+.prop-label { color: #71717a; font-weight: 500; }
+.prop-value { color: #e4e4e7; text-align: right; max-width: 60%; word-break: break-all; }
 
-.modal textarea:focus, .modal input[type="text"]:focus {
-  border-color: #a1a1aa;
-}
-
-/* ESTILOS DA GRADE DE PROPRIEDADES */
-.prop-group {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.prop-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #27272a;
-}
-
-.prop-label {
-  color: #71717a;
-  font-weight: 500;
-}
-
-.prop-value {
-  color: #e4e4e7;
-  text-align: right;
-  max-width: 60%;
-  word-break: break-all;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 24px;
-}
-
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 .modal-actions button, .btn-secondary {
   padding: 10px 16px;
   font-size: 13px;
@@ -388,34 +430,14 @@ h1 {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-
-.btn-cancel {
-  background: transparent;
-  color: #a1a1aa;
-}
+.btn-cancel { background: transparent; color: #a1a1aa; }
 .btn-cancel:hover { color: #fff; }
-
-.save {
-  background: #f4f4f5;
-  color: #09090b;
-}
+.save { background: #f4f4f5; color: #09090b; }
 .save:hover { background: #e4e4e7; }
+.btn-secondary { background: #27272a; color: #e4e4e7; margin-top: 8px; width: 100%; }
+.btn-secondary:hover { background: #3f3f46; color: #fff; }
 
-.btn-secondary {
-  background: #27272a;
-  color: #e4e4e7;
-  margin-top: 8px;
-  width: 100%;
-}
-.btn-secondary:hover {
-  background: #3f3f46;
-  color: #fff;
-}
-
-/* PRÉVIA DE IMAGEM (VIEWER) */
-#imageViewer {
-  flex-direction: column;
-}
+#imageViewer { flex-direction: column; }
 #previewExpanded {
   max-width: 90vw;
   max-height: 85vh;
@@ -423,45 +445,109 @@ h1 {
   border-radius: 8px;
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
 }
-.close-viewer {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: #a1a1aa;
-  font-size: 36px;
-  cursor: pointer;
-  transition: color 0.2s;
-}
+.close-viewer { position: absolute; top: 20px; right: 30px; color: #a1a1aa; font-size: 36px; cursor: pointer; transition: color 0.2s; }
 .close-viewer:hover { color: #fff; }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<aside class="sidebar">
+  <h2>Workspace</h2>
+  <nav class="nav-menu">
+    <button class="nav-item active" onclick="switchPage('home', this)">
+      <img src="hm.png" alt="Início"> Início
+    </button>
+    <button class="nav-item" onclick="switchPage('drive', this)">
+      <img src="fl.png" alt="Drive"> Mini Drive
+    </button>
+    <button class="nav-item" onclick="switchPage('pomodoro', this)">
+      <img src="pd.png" alt="Pomodoro"> Pomodoro
+    </button>
+    <button class="nav-item" onclick="switchPage('ia', this)">
+      <img src="ia.png" alt="IA"> Assistente IA
+    </button>
+  </nav>
+</aside>
 
-<header>
-  <h1>Mini Drive by Kaleb</h1>
+<main class="main-content">
 
-  <div style="position:relative">
-    <button class="iconBtn" id="plus">+</button>
-
-    <div class="menu" id="menu">
-      <button onclick="selectFile()">
-        <img src="av.png" width="16" style="opacity: 0.8;"> Arquivo
-      </button>
-      <button onclick="openModal()">
-        <img src="tx.png" width="16" style="opacity: 0.8;"> Texto
-      </button>
+  <div id="page-home" class="page active">
+    <header>
+      <div>
+        <h1>Bem-vindo Kaleb</h1>
+        <div class="subtitle">Aqui está o resumo do seu dia.</div>
+      </div>
+    </header>
+    
+    <div class="dashboard-grid">
+      <div class="dash-widget">
+        <h3>Acesso Rápido</h3>
+        <p style="color: #71717a; font-size: 14px;">Use o menu lateral para navegar pelas suas ferramentas de produtividade.</p>
+      </div>
+      <div class="dash-widget">
+        <h3>Status do Drive</h3>
+        <p style="color: #71717a; font-size: 14px;" id="drive-stats-placeholder">Carregando informações...</p>
+      </div>
     </div>
-
-    <input type="file" id="file" multiple style="display:none">
   </div>
-</header>
 
-<div class="grid" id="grid"></div>
+  <div id="page-drive" class="page">
+    <header>
+      <div>
+        <h1>Mini Drive</h1>
+        <div class="subtitle">Seus arquivos e notas na nuvem</div>
+      </div>
+      <div style="position:relative">
+        <button class="iconBtn" id="plus">+</button>
+        <div class="menu" id="menu">
+          <button onclick="selectFile()">
+            <img src="fl.png" width="16" style="opacity: 0.8;"> Arquivo
+          </button>
+          <button onclick="openModal()">
+            <span style="font-size:16px;">📝</span> Texto
+          </button>
+        </div>
+        <input type="file" id="file" multiple style="display:none">
+      </div>
+    </header>
+    <div class="grid" id="grid"></div>
+  </div>
 
-</div>
+  <div id="page-pomodoro" class="page">
+    <header>
+      <div>
+        <h1>Foco & Pomodoro</h1>
+        <div class="subtitle">Gerencie seu tempo de trabalho</div>
+      </div>
+    </header>
+    
+    <div class="pomodoro-container">
+      <h3 style="margin: 0; color: #a1a1aa;" id="timer-mode">Tempo de Foco</h3>
+      <div class="timer-display" id="time-display">25:00</div>
+      
+      <div class="pomodoro-controls">
+        <button class="btn-pomo btn-primary" id="btn-pomo-start" onclick="togglePomodoro()">Iniciar</button>
+        <button class="btn-pomo btn-outline" onclick="resetPomodoro()">Resetar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-ia" class="page">
+    <header>
+      <div>
+        <h1>Inteligência Artificial</h1>
+        <div class="subtitle">Em desenvolvimento...</div>
+      </div>
+    </header>
+    <div style="text-align: center; margin-top: 100px; color: #71717a;">
+      <img src="ia.png" style="width: 64px; opacity: 0.5; margin-bottom: 20px;">
+      <h2>Sua IA chegará em breve!</h2>
+      <p>Este espaço está reservado para as futuras integrações de Inteligência Artificial.</p>
+    </div>
+  </div>
+
+</main>
 
 <div class="modal-bg" id="modal">
   <div class="modal">
@@ -488,27 +574,14 @@ h1 {
 <div class="modal-bg" id="propertiesModal">
   <div class="modal">
     <h3>Propriedades do Arquivo</h3>
-    
     <label style="font-size: 12px; color: #a1a1aa; display:block; margin-bottom: 6px;">Nome do Arquivo</label>
     <input type="text" id="propNameInput" placeholder="Nome do arquivo">
-    
     <div class="prop-group">
-      <div class="prop-row">
-        <span class="prop-label">Tamanho:</span>
-        <span class="prop-value" id="propSize">--</span>
-      </div>
-      <div class="prop-row">
-        <span class="prop-label">Criado em:</span>
-        <span class="prop-value" id="propDate">--</span>
-      </div>
-      <div class="prop-row">
-        <span class="prop-label">Tipo:</span>
-        <span class="prop-value" id="propType">--</span>
-      </div>
+      <div class="prop-row"><span class="prop-label">Tamanho:</span><span class="prop-value" id="propSize">--</span></div>
+      <div class="prop-row"><span class="prop-label">Criado em:</span><span class="prop-value" id="propDate">--</span></div>
+      <div class="prop-row"><span class="prop-label">Tipo:</span><span class="prop-value" id="propType">--</span></div>
     </div>
-
     <button class="btn-secondary" id="btnCopyLink">🔗 Copiar Link Direto</button>
-
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closePropertiesModal()">Cancelar</button>
       <button class="save" onclick="saveProperties()">Salvar Nome</button>
@@ -518,15 +591,71 @@ h1 {
 
 <div class="modal-bg" id="imageViewer" onclick="closeViewer()">
   <span class="close-viewer">&times;</span>
-  <img id="previewExpanded" src="" onclick="(e) => e.stopPropagation()">
+  <img id="previewExpanded" src="" onclick="event.stopPropagation()">
 </div>
 
+<script>
+  // --- SISTEMA DE NAVEGAÇÃO (SPA) ---
+  function switchPage(pageId, btnElement) {
+    // Esconder todas as páginas
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    // Mostrar a página solicitada
+    document.getElementById('page-' + pageId).classList.add('active');
+    
+    // Atualizar estado ativo no menu lateral
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+  }
+
+  // --- LÓGICA DO POMODORO ---
+  let pomoTime = 25 * 60; // 25 minutos em segundos
+  let pomoInterval = null;
+  let isRunning = false;
+  const timeDisplay = document.getElementById('time-display');
+  const btnStart = document.getElementById('btn-pomo-start');
+
+  function updateDisplay() {
+    const minutes = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+    const seconds = (pomoTime % 60).toString().padStart(2, '0');
+    timeDisplay.textContent = `${minutes}:${seconds}`;
+  }
+
+  function togglePomodoro() {
+    if (isRunning) {
+      clearInterval(pomoInterval);
+      btnStart.textContent = 'Retomar';
+    } else {
+      pomoInterval = setInterval(() => {
+        if (pomoTime > 0) {
+          pomoTime--;
+          updateDisplay();
+        } else {
+          clearInterval(pomoInterval);
+          alert('Tempo de foco concluído! Faça uma pausa.');
+          resetPomodoro();
+        }
+      }, 1000);
+      btnStart.textContent = 'Pausar';
+    }
+    isRunning = !isRunning;
+  }
+
+  function resetPomodoro() {
+    clearInterval(pomoInterval);
+    pomoTime = 25 * 60;
+    isRunning = false;
+    btnStart.textContent = 'Iniciar';
+    updateDisplay();
+  }
+</script>
+
 <script type="module">
+// --- LÓGICA DO SUPABASE E MINI DRIVE ---
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const supabase = createClient(
-"https://uosubywnpexfdykxrsda.supabase.co",
-"sb_publishable_c7Gcs7TYe8elQ-lZ50cjUA_EERGehuQ"
+  "https://uosubywnpexfdykxrsda.supabase.co",
+  "sb_publishable_c7Gcs7TYe8elQ-lZ50cjUA_EERGehuQ"
 );
 
 const BUCKET="arquivos";
@@ -539,14 +668,10 @@ const fileInput=document.getElementById("file");
 let cacheItens = [];
 let currentEditingId = null;
 let currentEditingColumn = 'id';
-
 let currentPropertiesId = null;
 let currentPropertiesColumn = 'id';
 let currentPropertiesUrl = '';
 
-/* ===========================
-   FORMATADORES AUXILIARES
-=========================== */
 function formatBytes(bytes) {
   if (!bytes || bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -561,9 +686,6 @@ function formatDate(dateString) {
   return date.toLocaleDateString('pt-BR') + ' às ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
-/* ===========================
-   CONTROLE DE MENUS E MODAIS
-=========================== */
 document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
   menu.style.display = menu.style.display==="flex"?"none":"flex";
@@ -572,12 +694,10 @@ document.getElementById("plus").onclick=(e)=>{
 window.toggleCardMenu = (event, id) => {
   event.stopPropagation();
   const targetMenu = document.getElementById(`menu-${id}`);
-  
   document.querySelectorAll('.card-menu').forEach(m => {
     if(m !== targetMenu) m.style.display = 'none';
   });
   menu.style.display = 'none';
-
   if(targetMenu) {
     targetMenu.style.display = targetMenu.style.display === 'flex' ? 'none' : 'flex';
   }
@@ -613,20 +733,16 @@ window.closeEditModal=()=>{
   currentEditingId = null;
 };
 
-/* MODAL DE PROPRIEDADES */
 window.openPropertiesModal = (id, columnName) => {
   const item = cacheItens.find(i => i.id === id || i.uuid === id);
   if(!item) return;
-
   currentPropertiesId = id;
   currentPropertiesColumn = columnName;
   currentPropertiesUrl = item.url;
-
   document.getElementById("propNameInput").value = item.nome || "";
   document.getElementById("propSize").innerText = formatBytes(item.tamanho);
   document.getElementById("propDate").innerText = formatDate(item.criado_em);
   document.getElementById("propType").innerText = item.tipo || "Desconhecido";
-
   document.getElementById("propertiesModal").style.display = "flex";
 };
 
@@ -643,9 +759,6 @@ document.getElementById("btnCopyLink").onclick = () => {
   }
 };
 
-/* ===========================
-   PRÉVIA DA IMAGEM E DOWNLOAD
-=========================== */
 window.openViewer=(url)=>{
   document.getElementById("previewExpanded").src = url;
   document.getElementById("imageViewer").style.display="flex";
@@ -674,9 +787,6 @@ window.forceDownload = async (url, filename) => {
   }
 };
 
-/* ===========================
-   COPIAR E COLAR (TEXTOS)
-=========================== */
 window.copyText = (id) => {
   const item = cacheItens.find(i => i.id === id || i.uuid === id);
   if(item && item.content) {
@@ -694,12 +804,10 @@ window.pasteText = async (id, columnName) => {
       return;
     }
     const novoTitulo = textDoClipboard.substring(0, 20).trim() || "Bloco de Notas";
-
     const { error } = await supabase
       .from(TABLE)
       .update({ content: textDoClipboard, nome: novoTitulo, tamanho: textDoClipboard.length })
       .eq(columnName, id);
-
     if (error) throw error;
     load();
   } catch (err) {
@@ -708,15 +816,10 @@ window.pasteText = async (id, columnName) => {
   }
 };
 
-/* ===========================
-   AÇÕES DO BANCO DE DADOS (CRUD)
-=========================== */
 window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
-
   const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
-
   const { error } = await supabase.from(TABLE).insert({
     tipo_item: "text",
     content: text,
@@ -727,7 +830,6 @@ window.saveText=async()=>{
     caminho: "text-note",   
     criado_em: new Date()
   });
-
   if (error) {
     alert("Erro ao salvar texto: " + error.message);
   } else {
@@ -740,14 +842,11 @@ window.saveText=async()=>{
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
   if(!newText.trim() || !currentEditingId) return;
-
   const novoTitulo = newText.substring(0, 20).trim() || "Bloco de Notas";
-
   const { error } = await supabase
     .from(TABLE)
     .update({ content: newText, nome: novoTitulo, tamanho: newText.length })
     .eq(currentEditingColumn, currentEditingId);
-
   if (error) {
     alert("Erro ao atualizar texto: " + error.message);
   } else {
@@ -756,16 +855,13 @@ window.updateText=async()=>{
   }
 };
 
-// Renomeia o arquivo físico/imagem na tabela através do Modal de Propriedades
 window.saveProperties=async()=>{
   const newName = document.getElementById("propNameInput").value;
   if(!newName.trim() || !currentPropertiesId) return;
-
   const { error } = await supabase
     .from(TABLE)
     .update({ nome: newName })
     .eq(currentPropertiesColumn, currentPropertiesId);
-
   if(error) {
     alert("Erro ao renomear arquivo: " + error.message);
   } else {
@@ -785,9 +881,7 @@ fileInput.onchange=async(e)=>{
     try {
       const uploadRes = await supabase.storage.from(BUCKET).upload(path,file);
       if(uploadRes.error) throw uploadRes.error;
-
       const {data}=supabase.storage.from(BUCKET).getPublicUrl(path);
-
       const insertRes = await supabase.from(TABLE).insert({
         nome:file.name,
         tipo:file.type,
@@ -799,7 +893,6 @@ fileInput.onchange=async(e)=>{
         criado_em:new Date()
       });
       if(insertRes.error) throw insertRes.error;
-
     } catch (error) {
       alert("Erro no arquivo: " + error.message);
     }
@@ -816,38 +909,39 @@ async function load(){
     .order("criado_em",{ascending:false});
 
     if(error) throw error;
-
     grid.innerHTML="";
     if(!data) return;
     
     cacheItens = data;
+    
+    // Atualiza info na Home
+    const dashboardStats = document.getElementById('drive-stats-placeholder');
+    if(dashboardStats) {
+      dashboardStats.innerHTML = `Você tem <strong>${data.length}</strong> arquivos/notas salvos na nuvem.`;
+    }
 
     data.forEach((item,i)=>{
       const div=document.createElement("div");
       div.className="card";
       div.style.animationDelay = `${i * 50}ms`;
-
       const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
       const itemId = item[idColumnName];
 
       if(item.tipo_item==="file"){
         const isImage = item.tipo?.startsWith("image/");
-        
         div.innerHTML=`
           <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
-          
           <div class="card-menu" id="menu-${itemId}">
             <button onclick="window.open('${item.url}', '_blank')">Ver</button>
             <button onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
             <button onclick="openPropertiesModal('${itemId}', '${idColumnName}')">Propriedades</button>
             <button class="delete-opt" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
           </div>
-
           <div class="preview">
             ${isImage
               ? `<img class="real" src="${item.url}" onclick="openViewer('${item.url}')">
                  <span class="zoom-hint">🔍 Expandir</span>`
-              : `<img class="iconFile" src="av.png">`}
+              : `<img class="iconFile" src="fl.png">`}
           </div>
           <div class="card-body">
             <div class="card-title" title="${item.nome}">${item.nome}</div>
@@ -855,17 +949,14 @@ async function load(){
         `;
       } else {
         const safeContent = encodeURIComponent(item.content || "");
-
         div.innerHTML=`
           <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
-          
           <div class="card-menu" id="menu-${itemId}">
             <button onclick="openEditModal('${itemId}', '${safeContent}', '${idColumnName}')">Editar</button>
             <button onclick="copyText('${itemId}')">Copiar</button>
             <button onclick="pasteText('${itemId}', '${idColumnName}')">Colar</button>
             <button class="delete-opt" onclick="del('${itemId}','', '${idColumnName}')">Excluir</button>
           </div>
-
           <div class="preview">
             <div class="preview-text">${item.content || ""}</div>
           </div>
