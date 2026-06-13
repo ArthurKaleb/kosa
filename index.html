@@ -75,9 +75,7 @@ body {
   color: #fff;
 }
 
-.nav-item:hover img {
-  opacity: 1;
-}
+.nav-item:hover img { opacity: 1; }
 
 .nav-item.active {
   background: #27272a;
@@ -85,9 +83,7 @@ body {
   border-left: 3px solid #f4f4f5;
 }
 
-.nav-item.active img {
-  opacity: 1;
-}
+.nav-item.active img { opacity: 1; }
 
 /* ==========================================================================
    ÁREA PRINCIPAL E PÁGINAS
@@ -102,13 +98,11 @@ body {
   display: none;
   max-width: 1100px;
   margin: auto;
-  padding: 40px 40px;
+  padding: 40px;
   animation: fadeIn 0.3s ease;
 }
 
-.page.active {
-  display: block;
-}
+.page.active { display: block; }
 
 header {
   display: flex;
@@ -135,7 +129,7 @@ h1 {
    ========================================================================== */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
   margin-top: 30px;
 }
@@ -145,12 +139,138 @@ h1 {
   border: 1px solid #27272a;
   border-radius: 14px;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .dash-widget h3 {
   margin: 0 0 16px 0;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
   color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Bloco de Notas Rápido */
+.dash-widget textarea {
+  width: 100%;
+  height: 90px;
+  background: #09090b;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  resize: none;
+  box-sizing: border-box;
+  outline: none;
+}
+.dash-widget textarea:focus { border-color: #71717a; }
+
+/* Lista de Itens Recentes */
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #27272a;
+}
+.recent-name { color: #e4e4e7; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-date { color: #71717a; font-size: 11px; }
+
+/* To-Do List */
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+.todo-input-row {
+  display: flex;
+  gap: 8px;
+}
+.todo-input-row input {
+  flex-grow: 1;
+  background: #09090b;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+.todo-input-row button {
+  background: #f4f4f5;
+  color: #09090b;
+  border: none;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #09090b;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #27272a;
+  font-size: 13px;
+}
+.todo-item .left-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.todo-item input[type="checkbox"] {
+  accent-color: #f4f4f5;
+  cursor: pointer;
+}
+.todo-item.done span {
+  text-decoration: line-through;
+  color: #71717a;
+}
+.todo-del-btn {
+  background: transparent;
+  border: none;
+  color: #f43f5e;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Métricas Pomodoro */
+.pomo-stats-box {
+  text-align: center;
+  padding: 10px 0;
+}
+.pomo-stats-box .number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+}
+.pomo-stats-box .lbl {
+  font-size: 12px;
+  color: #71717a;
+  margin-top: 4px;
 }
 
 /* ==========================================================================
@@ -197,7 +317,7 @@ h1 {
 .btn-outline:hover { background: #27272a; }
 
 /* ==========================================================================
-   ESTILOS DO MINI DRIVE (Mantidos do original)
+   ESTILOS DO MINI DRIVE
    ========================================================================== */
 .iconBtn {
   width: 42px;
@@ -475,19 +595,42 @@ h1 {
   <div id="page-home" class="page active">
     <header>
       <div>
-        <h1>Bem-vindo Kaleb</h1>
-        <div class="subtitle">Aqui está o resumo do seu dia.</div>
+        <h1 id="welcome-title">Bem-vindo Kaleb</h1>
+        <div class="subtitle" id="live-clock">Carregando painel de controle...</div>
       </div>
     </header>
     
     <div class="dashboard-grid">
       <div class="dash-widget">
-        <h3>Acesso Rápido</h3>
-        <p style="color: #71717a; font-size: 14px;">Use o menu lateral para navegar pelas suas ferramentas de produtividade.</p>
+        <h3>Tarefas do Dia</h3>
+        <div class="todo-container">
+          <div class="todo-input-row">
+            <input type="text" id="todo-input" placeholder="Nova tarefa...">
+            <button onclick="addTodo()">+</button>
+          </div>
+          <ul class="todo-list" id="todo-list-element"></ul>
+        </div>
       </div>
+
       <div class="dash-widget">
-        <h3>Status do Drive</h3>
-        <p style="color: #71717a; font-size: 14px;" id="drive-stats-placeholder">Carregando informações...</p>
+        <h3>Rascunho Rápido</h3>
+        <textarea id="quick-note-textarea" placeholder="Digite um pensamento ou link rápido e clique em salvar..." style="margin-bottom:12px; flex-grow:1;"></textarea>
+        <button class="btn-pomo btn-primary" style="font-size:12px; padding:8px 16px; align-self:flex-end;" id="btn-save-quick-note">Salvar no Drive</button>
+      </div>
+
+      <div class="dash-widget">
+        <h3>Modificados Recentemente</h3>
+        <div class="recent-list" id="recent-files-container">
+          <p style="color:#71717a; font-size:13px;">Buscando arquivos recentes...</p>
+        </div>
+      </div>
+
+      <div class="dash-widget" style="justify-content: center;">
+        <h3>Produtividade</h3>
+        <div class="pomo-stats-box">
+          <div class="number" id="pomo-sessions-count">0</div>
+          <div class="lbl">Sessões Pomodoro Concluídas</div>
+        </div>
       </div>
     </div>
   </div>
@@ -595,20 +738,29 @@ h1 {
 </div>
 
 <script>
-  // --- SISTEMA DE NAVEGAÇÃO (SPA) ---
+  // --- NAVEGAÇÃO SPA ---
   function switchPage(pageId, btnElement) {
-    // Esconder todas as páginas
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    // Mostrar a página solicitada
     document.getElementById('page-' + pageId).classList.add('active');
-    
-    // Atualizar estado ativo no menu lateral
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
   }
 
+  // --- SAUDAÇÃO INTELIGENTE & RELÓGIO ---
+  function updateHeaderGreeting() {
+    const hours = new Date().getHours();
+    let greeting = "Bem-vindo Kaleb";
+    if (hours >= 5 && hours < 12) greeting = "Bom dia, Kaleb";
+    else if (hours >= 12 && hours < 18) greeting = "Boa tarde, Kaleb";
+    else greeting = "Boa noite, Kaleb";
+    
+    document.getElementById('welcome-title').textContent = greeting;
+    document.getElementById('live-clock').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  setInterval(updateHeaderGreeting, 60000);
+
   // --- LÓGICA DO POMODORO ---
-  let pomoTime = 25 * 60; // 25 minutos em segundos
+  let pomoTime = 25 * 60;
   let pomoInterval = null;
   let isRunning = false;
   const timeDisplay = document.getElementById('time-display');
@@ -631,7 +783,14 @@ h1 {
           updateDisplay();
         } else {
           clearInterval(pomoInterval);
-          alert('Tempo de foco concluído! Faça uma pausa.');
+          alert('Tempo de foco concluído! Ótimo trabalho.');
+          
+          // Adicionar sessão no LocalStorage
+          let count = parseInt(localStorage.getItem('pomo_sessions') || '0');
+          count++;
+          localStorage.setItem('pomo_sessions', count);
+          document.getElementById('pomo-sessions-count').textContent = count;
+          
           resetPomodoro();
         }
       }, 1000);
@@ -647,10 +806,63 @@ h1 {
     btnStart.textContent = 'Iniciar';
     updateDisplay();
   }
+
+  // --- LÓGICA DO TO-DO LIST (LOCALSTORAGE) ---
+  let todos = JSON.parse(localStorage.getItem('kaleb_todos') || '[]');
+
+  function saveTodos() {
+    localStorage.setItem('kaleb_todos', JSON.stringify(todos));
+    renderTodos();
+  }
+
+  function addTodo() {
+    const input = document.getElementById('todo-input');
+    if(!input.value.trim()) return;
+    todos.push({ id: Date.now(), text: input.value.trim(), done: false });
+    input.value = '';
+    saveTodos();
+  }
+
+  function toggleTodo(id) {
+    todos = todos.map(t => t.id === id ? { ...t, done: !t.done } : t);
+    saveTodos();
+  }
+
+  function deleteTodo(id) {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos();
+  }
+
+  function renderTodos() {
+    const listElement = document.getElementById('todo-list-element');
+    listElement.innerHTML = '';
+    todos.forEach(t => {
+      const li = document.createElement('li');
+      li.className = `todo-item ${t.done ? 'done' : ''}`;
+      li.innerHTML = `
+        <div class="left-side">
+          <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+          <span>${t.text}</span>
+        </div>
+        <button class="todo-del-btn" onclick="deleteTodo(${t.id})">✕</button>
+      `;
+      listElement.appendChild(li);
+    });
+  }
+
+  // Monitorar tecla Enter no input do To-Do
+  document.getElementById('todo-input').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') addTodo();
+  });
+
+  // Inicializações Locais Rápidas
+  updateHeaderGreeting();
+  renderTodos();
+  document.getElementById('pomo-sessions-count').textContent = localStorage.getItem('pomo_sessions') || '0';
 </script>
 
 <script type="module">
-// --- LÓGICA DO SUPABASE E MINI DRIVE ---
+// --- LÓGICA DO BANCO DE DADOS (SUPABASE) ---
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const supabase = createClient(
@@ -819,6 +1031,11 @@ window.pasteText = async (id, columnName) => {
 window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
+  await sendTextToSupabase(text);
+};
+
+// --- FUNÇÃO AUXILIAR PARA ENVIAR TEXTO (Compartilhada com o rascunho rápido) ---
+async function sendTextToSupabase(text) {
   const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
   const { error } = await supabase.from(TABLE).insert({
     tipo_item: "text",
@@ -834,9 +1051,21 @@ window.saveText=async()=>{
     alert("Erro ao salvar texto: " + error.message);
   } else {
     document.getElementById("textInput").value="";
+    document.getElementById("quick-note-textarea").value="";
     closeModal();
     load();
   }
+}
+
+// Vincula o botão de Rascunho Rápido da Home à função de salvar do Drive
+document.getElementById('btn-save-quick-note').onclick = async () => {
+  const text = document.getElementById('quick-note-textarea').value;
+  if(!text.trim()) {
+    alert("Escreva algo no rascunho antes de salvar!");
+    return;
+  }
+  await sendTextToSupabase(text);
+  alert("Rascunho salvo no seu Mini Drive com sucesso!");
 };
 
 window.updateText=async()=>{
@@ -901,6 +1130,36 @@ fileInput.onchange=async(e)=>{
   load();
 };
 
+// --- RENDERIZAR ARQUIVOS RECENTES NA HOME ---
+function renderRecentFiles(items) {
+  const container = document.getElementById('recent-files-container');
+  if(!container) return;
+  
+  if(items.length === 0) {
+    container.innerHTML = '<p style="color:#71717a; font-size:13px;">Nenhum arquivo encontrado.</p>';
+    return;
+  }
+
+  // Pega apenas os 4 itens mais recentes
+  const recents = items.slice(0, 4);
+  container.innerHTML = '';
+
+  recents.forEach(item => {
+    const itemRow = document.createElement('div');
+    itemRow.className = 'recent-item';
+    
+    // Formatar exibição de data curta
+    const dateObj = new Date(item.criado_em);
+    const shortDate = dateObj.toLocaleDateString('pt-BR', {day: 'numeric', month: 'short'});
+
+    itemRow.innerHTML = `
+      <span class="recent-name" title="${item.nome}">${item.tipo_item === 'text' ? '📝 ' : '📁 '}${item.nome}</span>
+      <span class="recent-date">${shortDate}</span>
+    `;
+    container.appendChild(itemRow);
+  });
+}
+
 async function load(){
   try {
     const {data, error}=await supabase
@@ -914,11 +1173,8 @@ async function load(){
     
     cacheItens = data;
     
-    // Atualiza info na Home
-    const dashboardStats = document.getElementById('drive-stats-placeholder');
-    if(dashboardStats) {
-      dashboardStats.innerHTML = `Você tem <strong>${data.length}</strong> arquivos/notas salvos na nuvem.`;
-    }
+    // Atualizar o Widget de modificados recentemente na Home
+    renderRecentFiles(data);
 
     data.forEach((item,i)=>{
       const div=document.createElement("div");
