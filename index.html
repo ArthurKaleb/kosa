@@ -281,6 +281,103 @@ button, .btn-link {
   color: #fff; 
   border-color: #f43f5e;
 }
+
+/* ==========================================================================
+   MODAIS (TEXTO E PRÉVIA DE IMAGEM)
+   ========================================================================== */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  width: 90%;
+  max-width: 500px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal textarea {
+  width: 100%;
+  height: 180px;
+  background: #09090b;
+  color: #fff;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.modal textarea:focus {
+  border-color: #a1a1aa;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.modal-actions button {
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #a1a1aa;
+}
+.btn-cancel:hover { color: #fff; }
+
+.save {
+  background: #f4f4f5;
+  color: #09090b;
+}
+.save:hover { background: #e4e4e7; }
+
+/* PRÉVIA DE IMAGEM (VIEWER) */
+#imageViewer {
+  flex-direction: column;
+}
+#previewExpanded {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+}
+.close-viewer {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #a1a1aa;
+  font-size: 36px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-viewer:hover { color: #fff; }
 </style>
 </head>
 
@@ -353,7 +450,7 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// Controla qual ID real está sendo editado
+// ALTERAÇÃO: Ajustado o nome do estado de controle para referenciar a coluna real 'id'
 let currentEditingId = null;
 
 /* ===========================
@@ -382,9 +479,9 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
+// ALTERAÇÃO: Ajustado parâmetro para 'id' e tratamento reverso das quebras de linha (\n)
 window.openEditModal=(id, currentContent)=>{
   currentEditingId = id;
-  // Desfaz a codificação para exibir quebras de linha normais no campo de edição
   document.getElementById("editTextInput").value = currentContent.replace(/\\n/g, '\n');
   document.getElementById("editModal").style.display="flex";
   setTimeout(()=>{
@@ -463,7 +560,7 @@ window.saveText=async()=>{
   }
 };
 
-// CORREÇÃO: Função atualizada para filtrar por .eq("id", ...) garantindo o mapeamento correto do banco
+// ALTERAÇÃO: Atualizada para executar o filtro correto apontando para a coluna real ".eq('id', ...)"
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
   if(!newText.trim() || !currentEditingId) return;
@@ -539,7 +636,7 @@ async function load(){
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
 
-      // CORREÇÃO: Mapeando a coluna correta 'item.id'
+      // ALTERAÇÃO: Mapeando a coluna real primária do banco 'item.id'
       const itemId = item.id;
 
       if(item.tipo_item==="file"){
@@ -562,7 +659,7 @@ async function load(){
           </div>
         `;
       } else {
-        // Tratamento seguro de strings para evitar que aspas ou quebras de linha quebrem o parâmetro do onclick
+        // ALTERAÇÃO: Tratamento completo de caracteres especiais e quebras de linha para não corromper o HTML do onclick
         const safeContent = (item.content || "")
           .replace(/\\/g, "\\\\")
           .replace(/'/g, "\\'")
@@ -590,7 +687,7 @@ async function load(){
   }
 }
 
-// CORREÇÃO: Remoção filtrando por .eq("id", id) para alinhar perfeitamente com o banco
+// ALTERAÇÃO: Ajustado para deletar filtrando por .eq("id", id) mapeando a coluna real
 window.del=async(id,path)=>{
   try {
     if(path && path.trim() !== "" && path !== "text-note"){
