@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive com Ícones</title>
+<title>Drive Simples</title>
 
 <style>
 body{
@@ -30,28 +30,29 @@ h1{font-size:22px}
 .actionsTop{
   display:flex;
   gap:10px;
-  align-items:center;
 }
 
-/* BOTÕES */
+/* BOTÃO + */
 .iconBtn{
   width:45px;
   height:45px;
   border-radius:50%;
-  background:#111;
   border:1px solid #333;
+  background:#111;
+  color:#fff;
+  font-size:22px;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-.iconBtn img{
-  width:22px;
-  height:22px;
+.iconBtn:hover{
+  background:#fff;
+  color:#000;
 }
 
-/* MENU + */
+/* MENU */
 .menu{
   position:absolute;
   right:30px;
@@ -70,11 +71,13 @@ h1{font-size:22px}
   border:none;
   color:#fff;
   padding:12px;
-  text-align:left;
   cursor:pointer;
+  text-align:left;
 }
 
-.menu button:hover{background:#222}
+.menu button:hover{
+  background:#222;
+}
 
 /* GRID */
 .grid{
@@ -106,13 +109,13 @@ h1{font-size:22px}
   overflow:hidden;
 }
 
-.preview img{
+img,video{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* TEXTO */
+/* TEXTOS */
 textarea{
   width:100%;
   background:#000;
@@ -151,16 +154,11 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive Ícones</h1>
+  <h1>Drive Limpo</h1>
 
   <div style="position:relative" class="actionsTop">
 
-    <!-- NOTIFICAÇÃO -->
-    <button class="iconBtn" id="notif">
-      <img src="nf.png">
-    </button>
-
-    <!-- + -->
+    <!-- BOTÃO + -->
     <button class="iconBtn" id="plus">+</button>
 
     <!-- MENU -->
@@ -193,7 +191,7 @@ const fileInput=document.getElementById("file");
 const menu=document.getElementById("menu");
 const plus=document.getElementById("plus");
 
-/* MENU */
+/* MENU + */
 plus.onclick=()=>{
   menu.style.display = menu.style.display==="flex" ? "none":"flex";
 };
@@ -204,14 +202,7 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-/* NOTIF BOTÃO */
-document.getElementById("notif").onclick=()=>{
-  alert("Notificações ativadas (visual)");
-};
-
-/* ======================
-   UPLOAD
-====================== */
+/* UPLOAD ARQUIVO */
 window.selectFile=()=>{
   fileInput.click();
 };
@@ -236,7 +227,6 @@ fileInput.onchange=async(e)=>{
       url:data.publicUrl,
       caminho:path,
       tipo_item:"file",
-      content:"",
       criado_em:new Date()
     });
   }
@@ -244,17 +234,13 @@ fileInput.onchange=async(e)=>{
   load();
 };
 
-/* ======================
-   TEXTO
-====================== */
+/* TEXTO */
 window.addText=async()=>{
 
   const text=prompt("Escreva o texto:");
-
   if(!text) return;
 
   await supabase.from(TABLE).insert({
-    nome:"Texto",
     tipo_item:"text",
     content:text,
     criado_em:new Date()
@@ -263,9 +249,7 @@ window.addText=async()=>{
   load();
 };
 
-/* ======================
-   LOAD
-====================== */
+/* LOAD */
 async function load(){
 
   const {data}=await supabase
@@ -279,32 +263,27 @@ async function load(){
 
     const div=document.createElement("div");
     div.className="card";
-    div.style.animationDelay=`${i*50}ms`;
+    div.style.animationDelay=`${i*60}ms`;
 
-    /* FILE */
     if(item.tipo_item==="file"){
 
       div.innerHTML=`
         <div class="preview">
           ${item.tipo?.startsWith("image/")
             ? `<img src="${item.url}">`
-            : `<img src="av.png">`}
+            : "📄"}
         </div>
 
         <div>${item.nome}</div>
 
         <a class="download" href="${item.url}" download>Baixar</a>
+        <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
       `;
     }
 
-    /* TEXT */
     else{
 
       div.innerHTML=`
-        <div class="preview">
-          <img src="tx.png" style="width:40px;height:40px">
-        </div>
-
         <textarea id="t-${item.id}">${item.content}</textarea>
 
         <div class="actions">
