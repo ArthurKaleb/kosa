@@ -3,296 +3,522 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kaleb Hub - Assistente Pessoal</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Mini Drive by Kaleb</title>
 
 <style>
 /* ==========================================================================
-   LAYOUT E SIDEBAR (Premium Dark Hub)
+   CONTEÚDO E LAYOUT BASE (Premium Dark UI)
    ========================================================================== */
-:root {
-  --bg-main: #09090b;
-  --bg-card: #18181b;
-  --border: #27272a;
-  --accent: #f4f4f5;
-  --text-dim: #a1a1aa;
-  --sidebar-w: 260px;
-}
-
 body {
   margin: 0;
-  background: var(--bg-main);
-  color: var(--accent);
-  font-family: system-ui, -apple-system, sans-serif;
-  display: flex;
-  min-height: 100vh;
-  overflow: hidden;
+  background: #09090b;
+  color: #f4f4f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: var(--sidebar-w);
-  background: #0c0c0e;
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 30px 15px;
-  z-index: 100;
+.app {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 20px;
 }
 
-.logo {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+/* BOTÃO ADICIONAR (+) */
+.iconBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #27272a;
+  background: #18181b;
+  color: #fff;
   font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 40px;
-  padding-left: 15px;
-  letter-spacing: -1px;
-}
-
-.nav-item {
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 15px;
-  color: var(--text-dim);
-  text-decoration: none;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.nav-item:hover, .nav-item.active {
-  background: var(--bg-card);
+.iconBtn:hover {
+  background: #27272a;
+  border-color: #3f3f46;
+  transform: scale(1.05);
+}
+
+/* MENU SUSPENSO PRINCIPAL (+) */
+.menu {
+  position: absolute;
+  right: 0;
+  top: 52px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  padding: 6px;
+  z-index: 100;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  min-width: 140px;
+}
+
+.menu button {
+  background: none;
+  border: none;
+  color: #e4e4e7;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.menu button:hover {
+  background: #27272a;
   color: #fff;
 }
 
-.nav-item i { width: 20px; font-size: 18px; }
-
-/* ÁREA DE CONTEÚDO PRINCIPAL */
-main {
-  flex-grow: 1;
-  height: 100vh;
-  overflow-y: auto;
-  position: relative;
-  padding: 40px;
-  box-sizing: border-box;
-}
-
-.view { display: none; }
-.view.active { display: block; animation: fadeIn 0.3s ease; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ==========================================================================
-   PÁGINA INICIAL (MURAL)
-   ========================================================================== */
-.welcome-msg { margin-bottom: 40px; }
-.welcome-msg h2 { font-size: 32px; font-weight: 700; margin: 0; }
-.welcome-msg p { color: var(--text-dim); margin-top: 8px; }
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.mural-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-}
-
-.mural-card h4 { margin: 0 0 15px 0; font-size: 16px; color: var(--text-dim); }
-.stat-val { font-size: 36px; font-weight: 700; }
-
-/* ==========================================================================
-   POMODORO
-   ========================================================================== */
-.pomodoro-container {
-  max-width: 400px;
-  margin: 100px auto;
-  text-align: center;
-  background: var(--bg-card);
-  padding: 40px;
-  border-radius: 30px;
-  border: 1px solid var(--border);
-}
-
-#timer { font-size: 80px; font-weight: 800; margin: 20px 0; font-variant-numeric: tabular-nums; }
-.pomo-btns { display: flex; justify-content: center; gap: 15px; }
-
-/* ==========================================================================
-   MINI DRIVE (ESTILO ANTERIOR ADAPTADO)
-   ========================================================================== */
-.drive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-
+/* GRID DE CARDS */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
 }
 
+/* CARDS */
 .card {
   position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: #18181b;
+  border: 1px solid #27272a;
   border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
+.card:hover {
+  border-color: #3f3f46;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* BOTÃO DOS 3 PONTINHOS (⋮) */
 .dots-btn {
-  position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-radius: 50%;
-  background: rgba(0,0,0,0.5); border: none; color: #fff; cursor: pointer; z-index: 5;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s;
 }
 
+.dots-btn:hover {
+  background: #27272a;
+  color: #fff;
+  border-color: #3f3f46;
+}
+
+/* MENU SUSPENSO INTERNO DE CADA CARD */
 .card-menu {
-  position: absolute; top: 45px; right: 10px; background: #1c1c1f; border: 1px solid var(--border);
-  border-radius: 10px; display: none; flex-direction: column; padding: 5px; z-index: 20; min-width: 130px;
+  position: absolute;
+  top: 46px;
+  right: 10px;
+  background: #1c1c1f;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  padding: 4px;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  min-width: 145px;
 }
 
-.card-menu button { background: none; border: none; color: #fff; padding: 10px; text-align: left; font-size: 13px; cursor: pointer; border-radius: 5px; }
-.card-menu button:hover { background: #27272a; }
+.card-menu button {
+  background: none;
+  border: none;
+  color: #e4e4e7;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 6px;
+  text-align: left;
+  transition: background 0.15s;
+}
 
-.preview { height: 120px; background: #000; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
-.preview img.real { width: 100%; height: 100%; object-fit: cover; }
-.preview-text { padding: 15px; font-size: 12px; color: var(--text-dim); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
+.card-menu button:hover {
+  background: #27272a;
+  color: #fff;
+}
 
-.card-body { padding: 12px; }
-.card-title { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dim); }
+.card-menu .delete-opt {
+  color: #f43f5e;
+}
+.card-menu .delete-opt:hover {
+  background: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+}
+
+/* PREVIEW DO CARD */
+.preview {
+  height: 145px;
+  background: #09090b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #27272a;
+  position: relative;
+}
+
+.preview img.real {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.preview img.real:hover {
+  transform: scale(1.05);
+}
+
+.iconFile {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+/* PREVIEW PARA NOTAS DE TEXTO */
+.preview-text {
+  padding: 20px;
+  font-size: 13px;
+  color: #71717a;
+  font-style: italic;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+/* LUPA SOBRE A IMAGEM DE PRÉVIA */
+.zoom-hint {
+  position: absolute;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  bottom: 10px;
+}
+
+.preview:hover .zoom-hint {
+  opacity: 1;
+}
+
+/* ÁREA DE TEXTO INTERNA DO CARD */
+.card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e4e4e7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-text {
+  font-size: 13px;
+  color: #e4e4e7;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
 /* ==========================================================================
-   MODAIS E BOTÕES
+   MODAIS
    ========================================================================== */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
-.modal { background: var(--bg-card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; border: 1px solid var(--border); }
-.modal textarea, .modal input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 12px; box-sizing: border-box; outline: none; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
 
-.btn-p { background: #fff; color: #000; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; }
-.btn-s { background: transparent; color: var(--text-dim); border: none; padding: 10px 20px; cursor: pointer; }
+.modal {
+  width: 90%;
+  max-width: 500px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
 
-.plus-btn { background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
 
-/* ESTILO DA PROPRIEDADE */
-.prop-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.modal textarea, .modal input[type="text"] {
+  width: 100%;
+  background: #09090b;
+  color: #fff;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.modal textarea {
+  height: 180px;
+  resize: none;
+}
+
+.modal textarea:focus, .modal input[type="text"]:focus {
+  border-color: #a1a1aa;
+}
+
+/* ESTILOS DA GRADE DE PROPRIEDADES */
+.prop-group {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #27272a;
+}
+
+.prop-label {
+  color: #71717a;
+  font-weight: 500;
+}
+
+.prop-value {
+  color: #e4e4e7;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-all;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-actions button, .btn-secondary {
+  padding: 10px 16px;
+  font-size: 13px;
+  border: none;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #a1a1aa;
+}
+.btn-cancel:hover { color: #fff; }
+
+.save {
+  background: #f4f4f5;
+  color: #09090b;
+}
+.save:hover { background: #e4e4e7; }
+
+.btn-secondary {
+  background: #27272a;
+  color: #e4e4e7;
+  margin-top: 8px;
+  width: 100%;
+}
+.btn-secondary:hover {
+  background: #3f3f46;
+  color: #fff;
+}
+
+/* PRÉVIA DE IMAGEM (VIEWER) */
+#imageViewer {
+  flex-direction: column;
+}
+#previewExpanded {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+}
+.close-viewer {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #a1a1aa;
+  font-size: 36px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-viewer:hover { color: #fff; }
 </style>
 </head>
 
 <body>
 
-<nav class="sidebar">
-  <div class="logo">K Hub.</div>
-  
-  <div class="nav-item active" onclick="switchPage('home', this)">
-    <i class="fa-solid fa-house"></i> Início
-  </div>
-  
-  <div class="nav-item" onclick="switchPage('drive', this)">
-    <i class="fa-solid fa-folder-open"></i> Mini Drive
-  </div>
-  
-  <div class="nav-item" onclick="switchPage('pomodoro', this)">
-    <i class="fa-solid fa-stopwatch"></i> Pomodoro
-  </div>
-  
-  <div class="nav-item" style="opacity: 0.4; cursor: not-allowed;">
-    <i class="fa-solid fa-robot"></i> Assistente IA
-  </div>
-</nav>
+<div class="app">
 
-<main>
+<header>
+  <h1>Mini Drive by Kaleb</h1>
 
-  <section id="home" class="view active">
-    <div class="welcome-msg">
-      <h2>Bem-vindo Kaleb</h2>
-      <p id="currentDate"></p>
+  <div style="position:relative">
+    <button class="iconBtn" id="plus">+</button>
+
+    <div class="menu" id="menu">
+      <button onclick="selectFile()">
+        <img src="av.png" width="16" style="opacity: 0.8;"> Arquivo
+      </button>
+      <button onclick="openModal()">
+        <img src="tx.png" width="16" style="opacity: 0.8;"> Texto
+      </button>
     </div>
 
-    <div class="dashboard-grid">
-      <div class="mural-card">
-        <h4>Arquivos no Drive</h4>
-        <div class="stat-val" id="countFiles">0</div>
-      </div>
-      <div class="mural-card">
-        <h4>Notas Salvas</h4>
-        <div class="stat-val" id="countNotes">0</div>
-      </div>
-      <div class="mural-card" id="recentNoteBox" style="grid-column: span 1;">
-        <h4>Lembrete Recente</h4>
-        <p id="recentNoteText" style="font-size: 14px; color: var(--text-dim);">Nenhuma nota recente.</p>
-      </div>
-    </div>
-  </section>
+    <input type="file" id="file" multiple style="display:none">
+  </div>
+</header>
 
-  <section id="drive" class="view">
-    <div class="drive-header">
-      <h3>Meus Arquivos</h3>
-      <div style="position:relative">
-        <button class="plus-btn" id="drivePlus">+</button>
-        <div class="card-menu" id="plusMenu" style="top: 50px; right: 0;">
-          <button onclick="selectFile()">📁 Enviar Arquivo</button>
-          <button onclick="openModal()">📝 Nova Nota</button>
-        </div>
-      </div>
-    </div>
-    
-    <input type="file" id="fileInput" multiple style="display:none">
-    <div class="grid" id="grid"></div>
-  </section>
+<div class="grid" id="grid"></div>
 
-  <section id="pomodoro" class="view">
-    <div class="pomodoro-container">
-      <h3 id="pomoStatus">Foco</h3>
-      <div id="timer">25:00</div>
-      <div class="pomo-btns">
-        <button class="btn-p" id="startPomo">Iniciar</button>
-        <button class="btn-s" id="resetPomo">Resetar</button>
-      </div>
-      <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
-         <button onclick="setPomo(25)" class="btn-s" style="font-size: 11px;">Foco</button>
-         <button onclick="setPomo(5)" class="btn-s" style="font-size: 11px;">Pausa Curta</button>
-      </div>
-    </div>
-  </section>
-
-</main>
+</div>
 
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <h3>Nova Nota</h3>
-    <textarea id="textInput" placeholder="O que você está pensando?"></textarea>
+    <h3>Escreva seu texto</h3>
+    <textarea id="textInput" placeholder="Digite seu bloco de notas aqui..."></textarea>
     <div class="modal-actions">
-      <button class="btn-s" onclick="closeModal()">Cancelar</button>
-      <button class="btn-p" onclick="saveText()">Salvar Nota</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="save" onclick="saveText()">Salvar</button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="editModal">
   <div class="modal">
-    <h3>Editar Nota</h3>
-    <textarea id="editTextInput"></textarea>
+    <h3>Editar texto</h3>
+    <textarea id="editTextInput" placeholder="Modifique seu bloco de notas aqui..."></textarea>
     <div class="modal-actions">
-      <button class="btn-s" onclick="closeEditModal()">Cancelar</button>
-      <button class="btn-p" onclick="updateText()">Atualizar</button>
+      <button class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="save" onclick="updateText()">Salvar Alterações</button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="propertiesModal">
   <div class="modal">
-    <h3>Propriedades</h3>
-    <div id="propsContent"></div>
+    <h3>Propriedades do Arquivo</h3>
+    
+    <label style="font-size: 12px; color: #a1a1aa; display:block; margin-bottom: 6px;">Nome do Arquivo</label>
+    <input type="text" id="propNameInput" placeholder="Nome do arquivo">
+    
+    <div class="prop-group">
+      <div class="prop-row">
+        <span class="prop-label">Tamanho:</span>
+        <span class="prop-value" id="propSize">--</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Criado em:</span>
+        <span class="prop-value" id="propDate">--</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Tipo:</span>
+        <span class="prop-value" id="propType">--</span>
+      </div>
+    </div>
+
+    <button class="btn-secondary" id="btnCopyLink">🔗 Copiar Link Direto</button>
+
     <div class="modal-actions">
-      <button class="btn-p" onclick="closeProps()">Fechar</button>
+      <button class="btn-cancel" onclick="closePropertiesModal()">Cancelar</button>
+      <button class="save" onclick="saveProperties()">Salvar Nome</button>
     </div>
   </div>
+</div>
+
+<div class="modal-bg" id="imageViewer" onclick="closeViewer()">
+  <span class="close-viewer">&times;</span>
+  <img id="previewExpanded" src="" onclick="(e) => e.stopPropagation()">
 </div>
 
 <script type="module">
@@ -306,165 +532,369 @@ const supabase = createClient(
 const BUCKET="arquivos";
 const TABLE="arquivos";
 
-// NAVEGAÇÃO
-window.switchPage = (pageId, el) => {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-  if(el) el.classList.add('active');
-  if(pageId === 'home') updateDashboard();
-};
+const grid=document.getElementById("grid");
+const menu=document.getElementById("menu");
+const fileInput=document.getElementById("file");
 
-// DATA NA HOME
-const d = new Date();
-document.getElementById('currentDate').innerText = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+let cacheItens = [];
+let currentEditingId = null;
+let currentEditingColumn = 'id';
+
+let currentPropertiesId = null;
+let currentPropertiesColumn = 'id';
+let currentPropertiesUrl = '';
 
 /* ===========================
-   LOGICA DRIVE (RESUMO)
+   FORMATADORES AUXILIARES
 =========================== */
-const grid = document.getElementById("grid");
-const drivePlus = document.getElementById("drivePlus");
-const plusMenu = document.getElementById("plusMenu");
+function formatBytes(bytes) {
+  if (!bytes || bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
 
-drivePlus.onclick = (e) => {
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('pt-BR') + ' às ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/* ===========================
+   CONTROLE DE MENUS E MODAIS
+=========================== */
+document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
-  plusMenu.style.display = plusMenu.style.display === 'flex' ? 'none' : 'flex';
+  menu.style.display = menu.style.display==="flex"?"none":"flex";
 };
 
-document.addEventListener('click', () => {
-  plusMenu.style.display = 'none';
-  document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
+window.toggleCardMenu = (event, id) => {
+  event.stopPropagation();
+  const targetMenu = document.getElementById(`menu-${id}`);
+  
+  document.querySelectorAll('.card-menu').forEach(m => {
+    if(m !== targetMenu) m.style.display = 'none';
+  });
+  menu.style.display = 'none';
+
+  if(targetMenu) {
+    targetMenu.style.display = targetMenu.style.display === 'flex' ? 'none' : 'flex';
+  }
+};
+
+document.addEventListener("click",(e)=>{
+  if(!menu.contains(e.target) && e.target.id!=="plus"){
+    menu.style.display="none";
+  }
+  if(!e.target.classList.contains('dots-btn')) {
+    document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
+  }
 });
 
-window.openModal = () => document.getElementById("modal").style.display = "flex";
-window.closeModal = () => document.getElementById("modal").style.display = "none";
-
-window.saveText = async () => {
-  const text = document.getElementById("textInput").value;
-  if(!text.trim()) return;
-  await supabase.from(TABLE).insert({ tipo_item: "text", content: text, nome: text.substring(0,20), criado_em: new Date(), url: 'note', caminho: 'note' });
-  document.getElementById("textInput").value = "";
-  closeModal(); load();
+window.openModal=()=>{
+  menu.style.display="none";
+  document.getElementById("modal").style.display="flex";
+  setTimeout(()=>{ document.getElementById("textInput").focus(); },100);
 };
 
-window.selectFile = () => document.getElementById("fileInput").click();
-document.getElementById("fileInput").onchange = async (e) => {
-  for(let file of e.target.files){
-    const path = `${Date.now()}_${file.name}`;
-    await supabase.storage.from(BUCKET).upload(path, file);
-    const {data} = supabase.storage.from(BUCKET).getPublicUrl(path);
-    await supabase.from(TABLE).insert({ nome: file.name, tipo: file.type, tamanho: file.size, url: data.publicUrl, caminho: path, tipo_item: "file", criado_em: new Date() });
+window.closeModal=()=>{ document.getElementById("modal").style.display="none"; };
+
+window.openEditModal=(id, encodedContent, columnName)=>{
+  currentEditingId = id;
+  currentEditingColumn = columnName || 'id';
+  document.getElementById("editTextInput").value = decodeURIComponent(encodedContent);
+  document.getElementById("editModal").style.display="flex";
+  setTimeout(()=>{ document.getElementById("editTextInput").focus(); },100);
+};
+
+window.closeEditModal=()=>{
+  document.getElementById("editModal").style.display="none";
+  currentEditingId = null;
+};
+
+/* MODAL DE PROPRIEDADES */
+window.openPropertiesModal = (id, columnName) => {
+  const item = cacheItens.find(i => i.id === id || i.uuid === id);
+  if(!item) return;
+
+  currentPropertiesId = id;
+  currentPropertiesColumn = columnName;
+  currentPropertiesUrl = item.url;
+
+  document.getElementById("propNameInput").value = item.nome || "";
+  document.getElementById("propSize").innerText = formatBytes(item.tamanho);
+  document.getElementById("propDate").innerText = formatDate(item.criado_em);
+  document.getElementById("propType").innerText = item.tipo || "Desconhecido";
+
+  document.getElementById("propertiesModal").style.display = "flex";
+};
+
+window.closePropertiesModal = () => {
+  document.getElementById("propertiesModal").style.display = "none";
+  currentPropertiesId = null;
+};
+
+document.getElementById("btnCopyLink").onclick = () => {
+  if(currentPropertiesUrl) {
+    navigator.clipboard.writeText(currentPropertiesUrl)
+      .then(() => alert("Link direto copiado para a área de transferência!"))
+      .catch(err => console.error("Erro ao copiar link:", err));
   }
+};
+
+/* ===========================
+   PRÉVIA DA IMAGEM E DOWNLOAD
+=========================== */
+window.openViewer=(url)=>{
+  document.getElementById("previewExpanded").src = url;
+  document.getElementById("imageViewer").style.display="flex";
+};
+
+window.closeViewer=()=>{
+  document.getElementById("imageViewer").style.display="none";
+  document.getElementById("previewExpanded").src = ""; 
+};
+
+window.forceDownload = async (url, filename) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename; 
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Erro ao forçar download", error);
+    window.open(url, '_blank');
+  }
+};
+
+/* ===========================
+   COPIAR E COLAR (TEXTOS)
+=========================== */
+window.copyText = (id) => {
+  const item = cacheItens.find(i => i.id === id || i.uuid === id);
+  if(item && item.content) {
+    navigator.clipboard.writeText(item.content)
+      .then(() => alert("Texto copiado com sucesso!"))
+      .catch(err => console.error("Erro ao copiar: ", err));
+  }
+};
+
+window.pasteText = async (id, columnName) => {
+  try {
+    const textDoClipboard = await navigator.clipboard.readText();
+    if(!textDoClipboard.trim()) {
+      alert("A sua área de transferência está vazia.");
+      return;
+    }
+    const novoTitulo = textDoClipboard.substring(0, 20).trim() || "Bloco de Notas";
+
+    const { error } = await supabase
+      .from(TABLE)
+      .update({ content: textDoClipboard, nome: novoTitulo, tamanho: textDoClipboard.length })
+      .eq(columnName, id);
+
+    if (error) throw error;
+    load();
+  } catch (err) {
+    alert("Erro ao colar do sistema. Verifique as permissões.");
+    console.error(err);
+  }
+};
+
+/* ===========================
+   AÇÕES DO BANCO DE DADOS (CRUD)
+=========================== */
+window.saveText=async()=>{
+  const text=document.getElementById("textInput").value;
+  if(!text.trim()) return;
+
+  const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
+
+  const { error } = await supabase.from(TABLE).insert({
+    tipo_item: "text",
+    content: text,
+    nome: tituloNota,
+    tipo: "text/plain",
+    tamanho: text.length,
+    url: "text-note",       
+    caminho: "text-note",   
+    criado_em: new Date()
+  });
+
+  if (error) {
+    alert("Erro ao salvar texto: " + error.message);
+  } else {
+    document.getElementById("textInput").value="";
+    closeModal();
+    load();
+  }
+};
+
+window.updateText=async()=>{
+  const newText=document.getElementById("editTextInput").value;
+  if(!newText.trim() || !currentEditingId) return;
+
+  const novoTitulo = newText.substring(0, 20).trim() || "Bloco de Notas";
+
+  const { error } = await supabase
+    .from(TABLE)
+    .update({ content: newText, nome: novoTitulo, tamanho: newText.length })
+    .eq(currentEditingColumn, currentEditingId);
+
+  if (error) {
+    alert("Erro ao atualizar texto: " + error.message);
+  } else {
+    closeEditModal();
+    load();
+  }
+};
+
+// Renomeia o arquivo físico/imagem na tabela através do Modal de Propriedades
+window.saveProperties=async()=>{
+  const newName = document.getElementById("propNameInput").value;
+  if(!newName.trim() || !currentPropertiesId) return;
+
+  const { error } = await supabase
+    .from(TABLE)
+    .update({ nome: newName })
+    .eq(currentPropertiesColumn, currentPropertiesId);
+
+  if(error) {
+    alert("Erro ao renomear arquivo: " + error.message);
+  } else {
+    closePropertiesModal();
+    load();
+  }
+};
+
+window.selectFile=()=>{
+  menu.style.display="none";
+  fileInput.click();
+};
+
+fileInput.onchange=async(e)=>{
+  for(let file of e.target.files){
+    const path=`${Date.now()}_${file.name}`;
+    try {
+      const uploadRes = await supabase.storage.from(BUCKET).upload(path,file);
+      if(uploadRes.error) throw uploadRes.error;
+
+      const {data}=supabase.storage.from(BUCKET).getPublicUrl(path);
+
+      const insertRes = await supabase.from(TABLE).insert({
+        nome:file.name,
+        tipo:file.type,
+        tamanho: file.size,
+        url:data.publicUrl,
+        caminho:path,
+        tipo_item:"file",
+        content: null,
+        criado_em:new Date()
+      });
+      if(insertRes.error) throw insertRes.error;
+
+    } catch (error) {
+      alert("Erro no arquivo: " + error.message);
+    }
+  }
+  fileInput.value = "";
   load();
 };
 
 async function load(){
-  const {data} = await supabase.from(TABLE).select("*").order("criado_em", {ascending: false});
-  grid.innerHTML = "";
-  if(!data) return;
-  data.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "card";
-    const itemId = item.id;
-    const isNote = item.tipo_item === 'text';
+  try {
+    const {data, error}=await supabase
+    .from(TABLE)
+    .select("*")
+    .order("criado_em",{ascending:false});
 
-    div.innerHTML = `
-      <button class="dots-btn" onclick="event.stopPropagation(); toggleMenu('${itemId}')">⋮</button>
-      <div class="card-menu" id="menu-${itemId}">
-        ${isNote ? `<button onclick="editNote('${itemId}', \`${encodeURIComponent(item.content)}\`)">Editar</button>` : `<button onclick="window.open('${item.url}')">Ver</button>`}
-        <button onclick="del('${itemId}', '${item.caminho}')">Excluir</button>
-      </div>
-      <div class="preview">
-        ${isNote ? `<div class="preview-text">${item.content}</div>` : (item.tipo?.startsWith("image") ? `<img src="${item.url}" class="real">` : `<i class="fa-solid fa-file" style="font-size:30px; color:#333"></i>`)}
-      </div>
-      <div class="card-body">
-        <div class="card-title">${item.nome || 'Nota'}</div>
-      </div>
-    `;
-    grid.appendChild(div);
-  });
-  updateDashboard(data);
-}
+    if(error) throw error;
 
-window.toggleMenu = (id) => {
-  const m = document.getElementById(`menu-${id}`);
-  m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
-};
+    grid.innerHTML="";
+    if(!data) return;
+    
+    cacheItens = data;
 
-window.del = async (id, path) => {
-  if(path && path !== 'note') await supabase.storage.from(BUCKET).remove([path]);
-  await supabase.from(TABLE).delete().eq("id", id);
-  load();
-};
+    data.forEach((item,i)=>{
+      const div=document.createElement("div");
+      div.className="card";
+      div.style.animationDelay = `${i * 50}ms`;
 
-/* ===========================
-   POMODORO
-=========================== */
-let timer;
-let minutes = 25;
-let seconds = 0;
-let isRunning = false;
+      const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
+      const itemId = item[idColumnName];
 
-const timerEl = document.getElementById('timer');
-const startBtn = document.getElementById('startPomo');
+      if(item.tipo_item==="file"){
+        const isImage = item.tipo?.startsWith("image/");
+        
+        div.innerHTML=`
+          <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
+          
+          <div class="card-menu" id="menu-${itemId}">
+            <button onclick="window.open('${item.url}', '_blank')">Ver</button>
+            <button onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
+            <button onclick="openPropertiesModal('${itemId}', '${idColumnName}')">Propriedades</button>
+            <button class="delete-opt" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
+          </div>
 
-window.setPomo = (m) => {
-  clearInterval(timer);
-  isRunning = false;
-  minutes = m;
-  seconds = 0;
-  updateTimerDisplay();
-  startBtn.innerText = "Iniciar";
-};
-
-function updateTimerDisplay() {
-  timerEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-startBtn.onclick = () => {
-  if(isRunning) {
-    clearInterval(timer);
-    startBtn.innerText = "Retomar";
-  } else {
-    timer = setInterval(() => {
-      if(seconds === 0) {
-        if(minutes === 0) {
-          clearInterval(timer);
-          alert("Ciclo finalizado!");
-          return;
-        }
-        minutes--;
-        seconds = 59;
+          <div class="preview">
+            ${isImage
+              ? `<img class="real" src="${item.url}" onclick="openViewer('${item.url}')">
+                 <span class="zoom-hint">🔍 Expandir</span>`
+              : `<img class="iconFile" src="av.png">`}
+          </div>
+          <div class="card-body">
+            <div class="card-title" title="${item.nome}">${item.nome}</div>
+          </div>
+        `;
       } else {
-        seconds--;
+        const safeContent = encodeURIComponent(item.content || "");
+
+        div.innerHTML=`
+          <button class="dots-btn" onclick="toggleCardMenu(event, '${itemId}')">⋮</button>
+          
+          <div class="card-menu" id="menu-${itemId}">
+            <button onclick="openEditModal('${itemId}', '${safeContent}', '${idColumnName}')">Editar</button>
+            <button onclick="copyText('${itemId}')">Copiar</button>
+            <button onclick="pasteText('${itemId}', '${idColumnName}')">Colar</button>
+            <button class="delete-opt" onclick="del('${itemId}','', '${idColumnName}')">Excluir</button>
+          </div>
+
+          <div class="preview">
+            <div class="preview-text">${item.content || ""}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-text">${item.content || ""}</div>
+          </div>
+        `;
       }
-      updateTimerDisplay();
-    }, 1000);
-    startBtn.innerText = "Pausar";
+      grid.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar dados:", error);
   }
-  isRunning = !isRunning;
-};
-
-document.getElementById('resetPomo').onclick = () => setPomo(25);
-
-/* ===========================
-   DASHBOARD
-=========================== */
-async function updateDashboard(preData) {
-  const data = preData || (await supabase.from(TABLE).select("*")).data;
-  if(!data) return;
-  
-  const files = data.filter(i => i.tipo_item === 'file').length;
-  const notes = data.filter(i => i.tipo_item === 'text').length;
-  const lastNote = data.find(i => i.tipo_item === 'text');
-
-  document.getElementById('countFiles').innerText = files;
-  document.getElementById('countNotes').innerText = notes;
-  if(lastNote) document.getElementById('recentNoteText').innerText = lastNote.content;
 }
+
+window.del=async(id, path, columnName = 'id')=>{
+  try {
+    if(path && path.trim() !== "" && path !== "text-note"){
+      await supabase.storage.from(BUCKET).remove([path]);
+    }
+    const { error } = await supabase.from(TABLE).delete().eq(columnName, id);
+    if(error) throw error;
+    load();
+  } catch (error) {
+    alert("Erro ao deletar: " + error.message);
+  }
+};
 
 load();
-switchPage('home');
 </script>
 
 </body>
