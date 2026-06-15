@@ -1,7 +1,7 @@
 {
   "name": "K.O.S.A",
   "short_name": "K.O.S.A",
-  "start_url": "/upload-site/",
+  "start_url": "/kosa/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
