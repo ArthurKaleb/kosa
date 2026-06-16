@@ -5,7 +5,11 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Kaleb Organization — OS</title>
-<meta content="#050505" name="theme-color"/>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#000000">
+
+<link rel="icon" type="image/x-icon" href="kosa.ico">
 
 <style>
         /* ======================================================================
@@ -2696,9 +2700,7 @@
 
             // Safe PWA registration
             if ('serviceWorker' in navigator) {
-            window.addEventListener('load', ()=>{
-                navigator.serviceWorker.register('/kosa/service-worker.js').catch(()=>{/* file may not exist, that's OK */});
-            });
+            navigator.serviceWorker.register('./service-worker.js');
             }
 
             // Launch
