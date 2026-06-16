@@ -2697,7 +2697,7 @@
             // Safe PWA registration
             if ('serviceWorker' in navigator) {
             window.addEventListener('load', ()=>{
-                navigator.serviceWorker.register('service-worker.js').catch(()=>{/* file may not exist, that's OK */});
+                navigator.serviceWorker.register('kosa/service-worker.js').catch(()=>{/* file may not exist, that's OK */});
             });
             }
 
